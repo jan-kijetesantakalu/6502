@@ -13,6 +13,7 @@ class cpu6502 {
 			SPMSB = 0;
 			P = {0, 0, 0, 0, 0, 0, 0};
 		}
+		void reset();
 	private:
 		//BUS
 		bus BUS;
