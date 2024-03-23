@@ -1,10 +1,14 @@
 #include <iostream>
-#include "cpu6502.h"
+#include "cpu6502.h" //CPU includes bus
+
 using namespace std;
 
 int main()
 {
-	cpu6502 CPU;
+	bus BUS; 
+
+	cpu6502 CPU = cpu6502(BUS);
+		
 	while (1) {
 		CPU.clock();
 	}

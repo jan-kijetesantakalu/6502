@@ -1,7 +1,9 @@
+#include "bus.h"
 class cpu6502 {
 	public:
 		void clock();
-		cpu6502() {
+		cpu6502(bus B) {
+			BUS = B;
 			clocks = 0;
 			A = 0;
 			Y = 0;
@@ -12,6 +14,8 @@ class cpu6502 {
 			P = {0, 0, 0, 0, 0, 0, 0};
 		}
 	private:
+		//BUS
+		bus BUS;
 		//REGISTERS
 		unsigned char A;
 		unsigned char Y;

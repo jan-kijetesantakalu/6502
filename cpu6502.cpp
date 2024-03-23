@@ -1,9 +1,11 @@
 #include "cpu6502.h"
 #include <iostream>
-using namespace std;
+#include <stdio.h>
 
+using namespace std;
 void cpu6502::clock()
 {
+	BUS.write(100, 5);
 	clocks++;
-	cout << "CPU CLOCK " << clocks;
+	printf("CPU CLOCK %d READ FROM BUS %d\n", clocks, BUS.read(100)); //DEBUG
 };
