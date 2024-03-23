@@ -15,7 +15,7 @@ void cpu6502::reset()
 	A = 0;
 	Y = 0;
 	X = 0;
-	PC = (BUS.read(0xFFFC) << 8) & BUS.read(0xFFFD); 
+	PC = (BUS.read(0xFFFD) << 8) & BUS.read(0xFFFC); 
 	SP = 0; //???
 	SPMSB = 0; //???
 	P = {0, 0, 0, 0, 0, 0, 0};
