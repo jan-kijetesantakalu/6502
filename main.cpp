@@ -5,7 +5,9 @@ using namespace std;
 int main()
 {
 	cpu6502 CPU;
-	CPU.clock();
+	while (1) {
+		CPU.clock();
+	}
 	//cout << "Hello World!";
 	return 0;
 }
