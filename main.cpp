@@ -14,6 +14,5 @@ int main()
 	while (1) {
 		CPU.clock();
 	}
-	//cout << "Hello World!";
 	return 0;
 }
