@@ -1,5 +1,4 @@
 #include "bus.h"
-#define u_char unsigned char
 class cpu6502 {
 	public:
 		void clock();
@@ -49,12 +48,12 @@ class cpu6502 {
 		unsigned char imp_A();
 		unsigned char imm();
 		unsigned char imp_i();
-		u_char PC_rel();
-		u_char stack();
-		u_char zp();
-		u_char zp_idx_ind();
-		u_char zp_idx_X();
-		u_char zp_idx_Y();
-		u_char zp_ind_addr();
-		u_char zp_ind_idx_Y();
+		unsigned char PC_rel();
+		unsigned char stack();
+		unsigned char zp();
+		unsigned char zp_idx_ind();
+		unsigned char zp_idx_X();
+		unsigned char zp_idx_Y();
+		unsigned char zp_ind_addr();
+		unsigned char zp_ind_idx_Y();
 };
