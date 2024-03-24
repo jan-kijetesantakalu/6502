@@ -35,25 +35,24 @@ class cpu6502 {
 		} P;
 		//DEBUGGING / EMU
 		int clocks;
-		
+		int cycles_to_wait;
 		//ADRESSING, RETURNS OPCODE
 		unsigned char operand;
 		unsigned short operand_addr;
-		
-		unsigned char abs_addr();
-		unsigned char abs_idx_ind();
-		unsigned char abs_idx_X();
-		unsigned char abs_idx_Y();
-		unsigned char abs_ind_addr();
-		unsigned char imp_A();
-		unsigned char imm();
-		unsigned char imp_i();
-		unsigned char PC_rel();
-		unsigned char stack();
-		unsigned char zp();
-		unsigned char zp_idx_ind();
-		unsigned char zp_idx_X();
-		unsigned char zp_idx_Y();
-		unsigned char zp_ind_addr();
-		unsigned char zp_ind_idx_Y();
+		void abs_addr();
+		void abs_idx_ind();
+		void abs_idx_X();
+		void abs_idx_Y();
+		void abs_ind_addr();
+		void imp_A();
+		void imm();
+		void imp_i();
+		void PC_rel();
+		void stack();
+		void zp();
+		void zp_idx_ind();
+		void zp_idx_X();
+		void zp_idx_Y();
+		void zp_ind_addr();
+		void zp_ind_idx_Y();		
 };
