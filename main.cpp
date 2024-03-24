@@ -8,7 +8,9 @@ int main()
 	bus BUS; 
 
 	cpu6502 CPU = cpu6502(BUS);
-		
+	
+	CPU.reset();
+
 	while (1) {
 		CPU.clock();
 	}
