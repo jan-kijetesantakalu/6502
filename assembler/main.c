@@ -17,11 +17,22 @@ int main(int argc, char **argv) {
 		return -1;
 	}
 	
+	FILE *binfp = fopen(argv[2], "w");
+	if (binfp == NULL) {
+		print("NULL FP");
+		return -1;
+	}
+
 	char line[LINE_SIZE];
 	while (fgets(line, LINE_SIZE+1, asmrawfp) != NULL) {
-        	printf("%s", line);
+        	printf("parsing: %s", line);
+		parse_line(line, binfp);
 	}
 
 	fclose(asmrawfp);
 	return 0;
+}
+
+int parse_line(char *line, FILE* fp) {
+	
 }
