@@ -5,6 +5,11 @@
 
 #define LINE_SIZE 255
 
+int parse_line(char *line, FILE* fp) {
+	char SYM[4];
+	snprintf(SYM, sizeof SYM, "%.3s", line);
+	printf("SYMBOL: %s\n", SYM);
+}
 
 int main(int argc, char **argv) {
 	if (argc != 3) {
@@ -19,13 +24,13 @@ int main(int argc, char **argv) {
 	
 	FILE *binfp = fopen(argv[2], "w");
 	if (binfp == NULL) {
-		print("NULL FP");
+		printf("NULL FP");
 		return -1;
 	}
 
 	char line[LINE_SIZE];
 	while (fgets(line, LINE_SIZE+1, asmrawfp) != NULL) {
-        	printf("parsing: %s", line);
+        	printf("parsing: %s\n", line);
 		parse_line(line, binfp);
 	}
 
@@ -33,6 +38,3 @@ int main(int argc, char **argv) {
 	return 0;
 }
 
-int parse_line(char *line, FILE* fp) {
-	
-}
