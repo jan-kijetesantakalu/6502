@@ -1,2 +1,2 @@
-main: main.cpp
-	g++ -o asm.exe main.cpp
+main: main.c
+	gcc -o asm.exe main.c
