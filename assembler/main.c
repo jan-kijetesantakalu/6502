@@ -1,15 +1,14 @@
 #define _GNU_SOURCE
 #include <stdio.h>
 #include <string.h>
-#include "/lib/slre.h"
+#include "./lib/slre.h"
 #include <stdlib.h>
 
 #define LINE_SIZE 255
 
-using namespace std;
 
 int parse_line(char *line, FILE* fp) {
-	regex 	
+	return 1;
 }
 
 int main(int argc, char **argv) {
