@@ -1,16 +1,15 @@
 #define _GNU_SOURCE
 #include <stdio.h>
 #include <string.h>
-#include <regex>
+#include "/lib/slre.h"
 #include <stdlib.h>
 
 #define LINE_SIZE 255
 
+using namespace std;
+
 int parse_line(char *line, FILE* fp) {
-	char SYM[4];
-	snprintf(SYM, sizeof SYM, "%.3s", line);
-	printf("SYMBOL: %s\n", SYM);
-	return 1;
+	regex 	
 }
 
 int main(int argc, char **argv) {
@@ -33,7 +32,8 @@ int main(int argc, char **argv) {
 	char line[LINE_SIZE];
 	while (fgets(line, LINE_SIZE+1, asmrawfp) != NULL) {
         	printf("parsing: %s\n", line);
-		parse_line(line, binfp);
+		if (parse_line(line, binfp) == 0)
+			printf("Invalid line");
 	}
 
 	fclose(asmrawfp);
