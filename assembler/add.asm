@@ -1,2 +1,2 @@
-LDA   #A0
-ADC   #31
+LDA #A0
+ADC #31
