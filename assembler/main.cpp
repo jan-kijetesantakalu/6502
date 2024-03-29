@@ -1,6 +1,7 @@
 #define _GNU_SOURCE
 #include <stdio.h>
 #include <string.h>
+#include <regex.h>
 #include <stdlib.h>
 
 #define LINE_SIZE 255
