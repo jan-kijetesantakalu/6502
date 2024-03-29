@@ -4,7 +4,7 @@
 #include "./lib/slre.h"
 #include <stdlib.h>
 
-#define LINE_SIZE 255
+#define LINE_SIZE 64
 
 
 
