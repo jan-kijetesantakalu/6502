@@ -16,8 +16,11 @@ int parse_line(char *line, FILE* fp) {
 	
 	struct slre_cap arg_cap;
 
-	if (slre_match("#([\\$ % 0-9 A-F][0-9 A-F]*)", line, strlen(line), &arg_cap, 1, SLRE_IGNORE_CASE) > 0) {
+	if (slre_match("#([\\$%0-9A-F][0-9A-F]*)", line, strlen(line), &arg_cap, 1, SLRE_IGNORE_CASE) > 0) {
 		printf("found imm arg: [%.*s]\n", arg_cap.len, arg_cap.ptr);
+	}
+	else if (slre_match(" (\\$[0-9A-F][0-9A-F][0-9A-F][0-9A-F])", line, strlen(line), &arg_cap, 1, SLRE_IGNORE_CASE) > 0) {	
+		printf("found abs addr: [%.*s]\n", arg_cap.len, arg_cap.ptr);
 	}
 
 	return 0;

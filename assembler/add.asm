@@ -1,4 +1,5 @@
-LDA #$A0
- 
- ADC #31
+LDA #$A0 
+ADC #31
 ADC #%00000001
+STA $A000
+LDX $A000 
