@@ -16,34 +16,34 @@ int parse_line(char *line, FILE* fp) {
 	
 	struct slre_cap arg_cap;
 
-	if (slre_match("\\s#([\\$%0-9A-F][0-9A-F]*)\\s", line, strlen(line), &arg_cap, 1, SLRE_IGNORE_CASE) > 0) {
+	if (slre_match("\\s#(\\S*)\\s*$", line, strlen(line), &arg_cap, 1, SLRE_IGNORE_CASE) > 0) {
 		printf("found imm: [%.*s]\n", arg_cap.len, arg_cap.ptr);
 	}
-	else if (slre_match("\\s(\\$[0-9A-F][0-9A-F][0-9A-F][0-9A-F])\\s", line, strlen(line), &arg_cap, 1, SLRE_IGNORE_CASE) > 0) {	
+	else if (slre_match("\\s(\\$\\S\\S\\S\\S)\\s*$", line, strlen(line), &arg_cap, 1, SLRE_IGNORE_CASE) > 0) {	
 		printf("found abs addr: [%.*s]\n", arg_cap.len, arg_cap.ptr);
 	}
-	else if (slre_match("\\s(\\$[0-9A-F][0-9A-F])\\s", line, strlen(line), &arg_cap, 1, SLRE_IGNORE_CASE) > 0) {
+	else if (slre_match("\\s(\\$\\S\\S)\\s*$", line, strlen(line), &arg_cap, 1, SLRE_IGNORE_CASE) > 0) {
 		printf("found zp/rel: [%.*s]\n", arg_cap.len, arg_cap.ptr);
 	}
-	else if (slre_match("\\s\\((\\$[0-9A-F][0-9A-F][0-9A-F][0-9A-F])\\)\\s", line, strlen(line), &arg_cap, 1, SLRE_IGNORE_CASE) > 0) {
+	else if (slre_match("\\s\\((\\$\\S\\S\\S\\S)\\)\\s*$", line, strlen(line), &arg_cap, 1, SLRE_IGNORE_CASE) > 0) {
 		printf("found ind addr: [%.*s]\n", arg_cap.len, arg_cap.ptr);
 	}
-	else if (slre_match("\\s(\\$[0-9A-F][0-9A-F][0-9A-F][0-9A-F]),X\\s", line, strlen(line), &arg_cap, 1, SLRE_IGNORE_CASE) > 0) {
+	else if (slre_match("\\s(\\$\\S\\S\\S\\S),X\\s*$", line, strlen(line), &arg_cap, 1, SLRE_IGNORE_CASE) > 0) {
 		printf("found abs idx X: [%.*s]\n", arg_cap.len, arg_cap.ptr);
 	}
-	else if (slre_match("\\s(\\$[0-9A-F][0-9A-F][0-9A-F][0-9A-F]),Y\\s", line, strlen(line), &arg_cap, 1, SLRE_IGNORE_CASE) > 0) {
+	else if (slre_match("\\s(\\$\\S\\S\\S\\S),Y\\s*$", line, strlen(line), &arg_cap, 1, SLRE_IGNORE_CASE) > 0) {
 		printf("found abs idx Y: [%.*s]\n", arg_cap.len, arg_cap.ptr);
 	}
-	else if (slre_match("\\s(\\$[0-9A-F][0-9A-F]),X\\s", line, strlen(line), &arg_cap, 1, SLRE_IGNORE_CASE) > 0) {
+	else if (slre_match("\\s(\\$\\S\\S),X\\s*$", line, strlen(line), &arg_cap, 1, SLRE_IGNORE_CASE) > 0) {
 		printf("found zp idx X: [%.*s]\n", arg_cap.len, arg_cap.ptr);
 	}
-	else if (slre_match("\\s(\\$[0-9A-F][0-9A-F]),Y\\s", line, strlen(line), &arg_cap, 1, SLRE_IGNORE_CASE) > 0) {
+	else if (slre_match("\\s(\\$\\S\\S),Y\\s*$", line, strlen(line), &arg_cap, 1, SLRE_IGNORE_CASE) > 0) {
 		printf("found zp idx Y: [%.*s]\n", arg_cap.len, arg_cap.ptr);
 	}
-	else if (slre_match("\\s\\((\\$[0-9A-F][0-9A-F]),X\\)\\s", line, strlen(line), &arg_cap, 1, SLRE_IGNORE_CASE) > 0) {
+	else if (slre_match("\\s\\((\\$\\S\\S),X\\)\\s*$", line, strlen(line), &arg_cap, 1, SLRE_IGNORE_CASE) > 0) {
 		printf("found zp idx X ind: [%.*s]\n", arg_cap.len, arg_cap.ptr);
 	}
-	else if (slre_match("\\s\\((\\$[0-9A-F][0-9A-F])\\),Y\\s", line, strlen(line), &arg_cap, 1, SLRE_IGNORE_CASE) > 0) {
+	else if (slre_match("\\s\\((\\$\\S\\S)\\),Y\\s*$", line, strlen(line), &arg_cap, 1, SLRE_IGNORE_CASE) > 0) {
 		printf("found zp ind idx Y: [%.*s]\n", arg_cap.len, arg_cap.ptr);
 	}
 
@@ -73,6 +73,7 @@ int main(int argc, char **argv) {
 
 	char line[LINE_SIZE];
 	while (fgets(line, LINE_SIZE+1, asmrawfp) != NULL) {
+		line[strlen(line)-1]='\0';
 		printf("parsing line:\n[\n%s\n]\n", line);
 		if (parse_line(line, binfp) < 0)
 			printf("error parsing line\n");
