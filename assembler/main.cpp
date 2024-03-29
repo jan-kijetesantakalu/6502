@@ -1,7 +1,7 @@
 #define _GNU_SOURCE
 #include <stdio.h>
 #include <string.h>
-#include <regex.h>
+#include <regex>
 #include <stdlib.h>
 
 #define LINE_SIZE 255
@@ -10,6 +10,7 @@ int parse_line(char *line, FILE* fp) {
 	char SYM[4];
 	snprintf(SYM, sizeof SYM, "%.3s", line);
 	printf("SYMBOL: %s\n", SYM);
+	return 1;
 }
 
 int main(int argc, char **argv) {
