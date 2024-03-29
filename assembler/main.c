@@ -31,6 +31,17 @@ int parse_line(char *line, FILE* fp) {
 	else if (slre_match("\\s(\\$[0-9A-F][0-9A-F][0-9A-F][0-9A-F]),X\\s", line, strlen(line), &arg_cap, 1, SLRE_IGNORE_CASE) > 0) {
 		printf("found abs idx X: [%.*s]\n", arg_cap.len, arg_cap.ptr);
 	}
+	else if (slre_match("\\s(\\$[0-9A-F][0-9A-F][0-9A-F][0-9A-F]),Y\\s", line, strlen(line), &arg_cap, 1, SLRE_IGNORE_CASE) > 0) {
+		printf("found abs idx Y: [%.*s]\n", arg_cap.len, arg_cap.ptr);
+	}
+	else if (slre_match("\\s(\\$[0-9A-F][0-9A-F]),X\\s", line, strlen(line), &arg_cap, 1, SLRE_IGNORE_CASE) > 0) {
+		printf("found zp idx X: [%.*s]\n", arg_cap.len, arg_cap.ptr);
+	}
+	else if (slre_match("\\s(\\$[0-9A-F][0-9A-F]),Y\\s", line, strlen(line), &arg_cap, 1, SLRE_IGNORE_CASE) > 0) {
+		printf("found zp idx Y: [%.*s]\n", arg_cap.len, arg_cap.ptr);
+	}
+	
+	
 
 	return 0;
 }
