@@ -8,7 +8,11 @@
 
 
 int parse_line(char *line, FILE* fp) {
-	return 1;
+	struct slre_cap SYM_cap;
+	if (slre_match("([A-Z][A-Z][A-Z])", line, strlen(line), &SYM_cap, 1, SLRE_IGNORE_CASE) < 0)
+		return -1;
+	printf("found symbol: [%.*s]\n", SYM_cap.len, SYM_cap.ptr); 
+	return 0;
 }
 
 int main(int argc, char **argv) {
@@ -30,9 +34,9 @@ int main(int argc, char **argv) {
 
 	char line[LINE_SIZE];
 	while (fgets(line, LINE_SIZE+1, asmrawfp) != NULL) {
-        	printf("parsing: %s\n", line);
-		if (parse_line(line, binfp) == 0)
-			printf("Invalid line");
+		printf("parsing line:\n[\n%s\n]\n", line);
+		if (parse_line(line, binfp) < 0)
+			printf("error parsing line\n");
 	}
 
 	fclose(asmrawfp);
