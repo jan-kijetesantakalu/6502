@@ -7,11 +7,19 @@
 #define LINE_SIZE 255
 
 
+
 int parse_line(char *line, FILE* fp) {
 	struct slre_cap SYM_cap;
 	if (slre_match("([A-Z][A-Z][A-Z])", line, strlen(line), &SYM_cap, 1, SLRE_IGNORE_CASE) < 0)
 		return -1;
-	printf("found symbol: [%.*s]\n", SYM_cap.len, SYM_cap.ptr); 
+	printf("found symbol: [%.*s]\n", SYM_cap.len, SYM_cap.ptr);
+	
+	struct slre_cap arg_cap;
+
+	if (slre_match("#([\\$ % 0-9 A-F][0-9 A-F]*)", line, strlen(line), &arg_cap, 1, SLRE_IGNORE_CASE) > 0) {
+		printf("found imm arg: [%.*s]\n", arg_cap.len, arg_cap.ptr);
+	}
+
 	return 0;
 }
 
