@@ -1,4 +1,2 @@
-6502.exe
-a.exe
-assembler/asm.exe
-assembler/*.bin
+*.exe
+*.bin
