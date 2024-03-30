@@ -38,6 +38,8 @@ struct instruction parse_line(char *line, FILE* fp) {
 	
 	struct instruction instr = {{0},0,0};
 	memcpy(instr.SYM, SYM_cap.ptr, 3);
+	
+	//FIND ADDRESSIGN MODE WITH REGEX
 
 	if (slre_match("\\s#(\\S*)\\s*$", line, strlen(line), &arg_cap, 1, SLRE_IGNORE_CASE) > 0) {
 		printf("found imm: [%.*s]\n", arg_cap.len, arg_cap.ptr);
@@ -82,8 +84,10 @@ struct instruction parse_line(char *line, FILE* fp) {
 	else {
 		printf("found no arguments, impl\n");
 		instr.mode = IMP;
-		return instr;
+		return instr; //NO OPERAND PROCESSING REQUIRED
 	}
+
+	//PROCESS OPERAND STRING
 
 	char *operand_str = calloc(sizeof(char), arg_cap.len);
 
