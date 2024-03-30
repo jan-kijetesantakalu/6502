@@ -460,9 +460,148 @@ void write_instruction(struct instruction instr, FILE *fp) {
 				break;
 		}
 	}
-
+	else if (strcmp("LDX", instr.SYM)==0) {
+		switch (instr.mode) {
+			case IMM:
+				fprintf(fp, "%c", 0xA2);
+				break;
+			case ZP_REL:
+				fprintf(fp, "%c", 0xA6);
+				break;
+			case ABS:
+				fprintf(fp, "%c", 0xAE);
+				break;
+			case ZP_Y:
+				fprintf(fp, "%c", 0xB6);
+				break;
+			case ABS_Y:
+				fprintf(fp, "%c", 0xBE);
+				break;
+			default:
+				printf("error writing LDX: invalid mode %d", instr.mode);
+				break;
+		}
+	}
+	else if (strcmp("BIT", instr.SYM)==0) {
+		switch (instr.mode) {
+			case ZP_REL:
+				fprintf(fp, "%c", 0x24);
+				break;
+			case ABS:
+				fprintf(fp, "%c", 0x2C);
+				break;
+			default:
+				printf("error writing BIT: invalid mode %d", instr.mode);
+				break;
+		}
+	}
+	else if (strcmp("STY", instr.SYM)==0) {
+		switch (instr.mode) {
+			case ZP_REL:
+				fprintf(fp, "%c", 0x84);
+				break;
+			case ABS:
+				fprintf(fp, "%c", 0x8C);
+				break;
+			case ZP_X:
+				fprintf(fp, "%c", 0x94);
+				break;
+			default:
+				printf("error writing STY: invalid mode %d", instr.mode);
+				break;
+		}
+	}
+	else if (strcmp("ASL", instr.SYM)==0) {
+		switch (instr.mode) {
+			case ZP_REL:
+				fprintf(fp, "%c", 0x06);
+				break;
+			case IMM:
+				fprintf(fp, "%c", 0x0A);
+				break;
+			case ABS:
+				fprintf(fp, "%c", 0x0E);
+				break;
+			case ZP_X:
+				fprintf(fp, "%c", 0x16);
+				break;
+			case ABS_X:
+				fprintf(fp, "%c", 0x1E);
+				break;
+			default:
+				printf("error writing ASL: invalid mode %d", instr.mode);
+				break;
+		}
+	}
+	else if (strcmp("ROL", instr.SYM)==0) {
+		switch (instr.mode) {
+			case ZP_REL:
+				fprintf(fp, "%c", 0x26);
+				break;
+			case IMM:
+				fprintf(fp, "%c", 0x2A);
+				break;
+			case ABS:
+				fprintf(fp, "%c", 0x2E);
+				break;
+			case ZP_X:
+				fprintf(fp, "%c", 0x36);
+				break;
+			case ABS_X:
+				fprintf(fp, "%c", 0x3E);
+				break;
+			default:
+				printf("error writing ROL: invalid mode %d", instr.mode);
+				break;
+		}	
+	}	
+	else if (strcmp("LSR", instr.SYM)==0) {
+		switch (instr.mode) {
+			case ZP_REL:
+				fprintf(fp, "%c", 0x46);
+				break;
+			case IMM:
+				fprintf(fp, "%c", 0x4A);
+				break;
+			case ABS:
+				fprintf(fp, "%c", 0x4E);
+				break;
+			case ZP_X:
+				fprintf(fp, "%c", 0x56);
+				break;
+			case ABS_X:
+				fprintf(fp, "%c", 0x5E);
+				break;
+			default:
+				printf("error writing LSR: invalid mode %d", instr.mode);
+				break;
+		}	
+	}	
+	else if (strcmp("ROR", instr.SYM)==0) {
+		switch (instr.mode) {
+			case ZP_REL:
+				fprintf(fp, "%c", 0x66);
+				break;
+			case IMM:
+				fprintf(fp, "%c", 0x6A);
+				break;
+			case ABS:
+				fprintf(fp, "%c", 0x6E);
+				break;
+			case ZP_X:
+				fprintf(fp, "%c", 0x76);
+				break;
+			case ABS_X:
+				fprintf(fp, "%c", 0x7E);
+				break;
+			default:
+				printf("error writing ROR: invalid mode %d", instr.mode);
+				break;
+		}	
+	}	
+		
 	else {
-			printf("error writing symbol: invalid symbol %s\n", instr.SYM);
+		printf("error writing symbol: invalid symbol %s\n", instr.SYM);
 	}
 }
 
