@@ -43,39 +43,39 @@ struct instruction parse_line(char *line, FILE* fp) {
 		printf("found imm: [%.*s]\n", arg_cap.len, arg_cap.ptr);
 		instr.mode = IMM;
 	}
-	else if (slre_match("\\s(\\$\\S\\S\\S\\S)\\s*$", line, strlen(line), &arg_cap, 1, SLRE_IGNORE_CASE) > 0) {	
+	else if (slre_match("\\s(\\$?%?\\S\\S\\S\\S)\\s*$", line, strlen(line), &arg_cap, 1, SLRE_IGNORE_CASE) > 0) {	
 		printf("found abs addr: [%.*s]\n", arg_cap.len, arg_cap.ptr);
 		instr.mode = ABS;
 	}
-	else if (slre_match("\\s(\\$\\S\\S)\\s*$", line, strlen(line), &arg_cap, 1, SLRE_IGNORE_CASE) > 0) {
+	else if (slre_match("\\s(\\$?%?\\S\\S)\\s*$", line, strlen(line), &arg_cap, 1, SLRE_IGNORE_CASE) > 0) {
 		printf("found zp/rel: [%.*s]\n", arg_cap.len, arg_cap.ptr);
 		instr.mode = ZP_REL;
 	}
-	else if (slre_match("\\s\\((\\$\\S\\S\\S\\S)\\)\\s*$", line, strlen(line), &arg_cap, 1, SLRE_IGNORE_CASE) > 0) {
+	else if (slre_match("\\s\\((\\$?%?\\S\\S\\S\\S)\\)\\s*$", line, strlen(line), &arg_cap, 1, SLRE_IGNORE_CASE) > 0) {
 		printf("found ind addr: [%.*s]\n", arg_cap.len, arg_cap.ptr);
 		instr.mode = IND;
 	}
-	else if (slre_match("\\s(\\$\\S\\S\\S\\S),X\\s*$", line, strlen(line), &arg_cap, 1, SLRE_IGNORE_CASE) > 0) {
+	else if (slre_match("\\s(\\$?%?\\S\\S\\S\\S),X\\s*$", line, strlen(line), &arg_cap, 1, SLRE_IGNORE_CASE) > 0) {
 		printf("found abs idx X: [%.*s]\n", arg_cap.len, arg_cap.ptr);
 		instr.mode = ABS_X;
 	}
-	else if (slre_match("\\s(\\$\\S\\S\\S\\S),Y\\s*$", line, strlen(line), &arg_cap, 1, SLRE_IGNORE_CASE) > 0) {
+	else if (slre_match("\\s(\\$?%?\\S\\S\\S\\S),Y\\s*$", line, strlen(line), &arg_cap, 1, SLRE_IGNORE_CASE) > 0) {
 		printf("found abs idx Y: [%.*s]\n", arg_cap.len, arg_cap.ptr);
 		instr.mode = ABS_Y;
 	}
-	else if (slre_match("\\s(\\$\\S\\S),X\\s*$", line, strlen(line), &arg_cap, 1, SLRE_IGNORE_CASE) > 0) {
+	else if (slre_match("\\s(\\$?%?\\S\\S),X\\s*$", line, strlen(line), &arg_cap, 1, SLRE_IGNORE_CASE) > 0) {
 		printf("found zp idx X: [%.*s]\n", arg_cap.len, arg_cap.ptr);
 		instr.mode = ZP_X;
 	}
-	else if (slre_match("\\s(\\$\\S\\S),Y\\s*$", line, strlen(line), &arg_cap, 1, SLRE_IGNORE_CASE) > 0) {
+	else if (slre_match("\\s(\\$?%?\\S\\S),Y\\s*$", line, strlen(line), &arg_cap, 1, SLRE_IGNORE_CASE) > 0) {
 		printf("found zp idx Y: [%.*s]\n", arg_cap.len, arg_cap.ptr);
 		instr.mode = ZP_Y;
 	}
-	else if (slre_match("\\s\\((\\$\\S\\S),X\\)\\s*$", line, strlen(line), &arg_cap, 1, SLRE_IGNORE_CASE) > 0) {
+	else if (slre_match("\\s\\((\\$?%?\\S\\S),X\\)\\s*$", line, strlen(line), &arg_cap, 1, SLRE_IGNORE_CASE) > 0) {
 		printf("found zp idx X ind: [%.*s]\n", arg_cap.len, arg_cap.ptr);
 		instr.mode = ZP_X_IND;
 	}
-	else if (slre_match("\\s\\((\\$\\S\\S)\\),Y\\s*$", line, strlen(line), &arg_cap, 1, SLRE_IGNORE_CASE) > 0) {
+	else if (slre_match("\\s\\((\\$?%?\\S\\S)\\),Y\\s*$", line, strlen(line), &arg_cap, 1, SLRE_IGNORE_CASE) > 0) {
 		printf("found zp ind idx Y: [%.*s]\n", arg_cap.len, arg_cap.ptr);
 		instr.mode = ZP_IND_Y;
 	}
