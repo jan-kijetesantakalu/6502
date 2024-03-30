@@ -27,7 +27,7 @@ struct instruction {
 };
 
 
-struct instruction parse_line(char *line, FILE* fp) {
+struct instruction parse_line(char *line) {
 	struct slre_cap SYM_cap;
 	if (slre_match("([A-Z][A-Z][A-Z])", line, strlen(line), &SYM_cap, 1, SLRE_IGNORE_CASE) < 0)
 		exit(-1);
@@ -109,8 +109,71 @@ struct instruction parse_line(char *line, FILE* fp) {
 	return instr;
 }
 
-void write_instruction(struct instruction instr, FILE *fp) {
 
+#define s strhash
+
+void write_instruction(struct instruction instr, FILE *fp) {
+	if (strcmp("BRK", instr.SYM)==0) {
+		//only ever impl
+		fprintf(fp, "%c", 0x00);
+	} 
+	else if (strcmp("BPL", instr.SYM)==0){
+		//only ever rel
+		fprintf(fp, "%c", 0x10);
+	}
+	else if (strcmp("JSR", instr.SYM)==0){
+		//only ever abs 
+		fprintf(fp, "%c", 0x20);
+	}
+	else if (strcmp("BMI", instr.SYM)==0) {
+		//only ever rel
+		fprintf(fp, "%c", 0x30);
+	}
+	else if (strcmp("RTI", instr.SYM)==0) {
+		//only ever impl
+		fprintf(fp, "%c", 0x40);
+	}
+	else if (strcmp("BVC", instr.SYM)==0) {
+		//only ever rel
+		fprintf(fp, "%c", 0x50);
+	}
+	else if (strcmp("RTS", instr.SYM)==0) {
+		//only ever impl
+		fprintf(fp, "%c", 0x60);
+	}
+	else if (strcmp("BVS", instr.SYM)==0) {
+		//only ever rel
+		fprintf(fp, "%c", 0x70);
+	}
+	else if (strcmp("BCC", instr.SYM)==0) {
+		//only ever rel
+		fprintf(fp, "%c", 0x90);
+	}
+	else if (strcmp("LDY", instr.SYM)==0) {
+		switch (instr.mode) {
+			case IMM:
+				fprintf(fp, "%c", 0xA0);
+				break;
+			case ZP_REL:
+				fprintf(fp, "%c", 0xA4);
+				break;
+			case ABS:
+				fprintf(fp, "%c", 0xAC);
+				break;
+			case ZP_X:
+				fprintf(fp, "%c", 0xB4);
+				break;
+			case ABS_X:
+				fprintf(fp, "%c", 0xBC);
+				break;
+			default:
+				printf("error writing LDY: invalid mode %d", instr.mode);
+				break;
+		}
+	}
+	else {
+			printf("error writing symbol: invalid symbol %s\n", instr.SYM);
+	}
 }
 
 int main(int argc, char **argv) {
@@ -134,8 +197,9 @@ int main(int argc, char **argv) {
 	while (fgets(line, LINE_SIZE+1, asmrawfp) != NULL) {
 		line[strlen(line)-1]='\0';
 		printf("parsing line:\n[\n%s\n]\n", line);
-		struct instruction parsed_line = parse_line(line, binfp);
+		struct instruction parsed_line = parse_line(line);
 		printf("instruction %s, with mode %d, and data %d\n", parsed_line.SYM, parsed_line.mode, parsed_line.operand);
+		write_instruction(parsed_line, binfp);
 	}
 
 	fclose(asmrawfp);
