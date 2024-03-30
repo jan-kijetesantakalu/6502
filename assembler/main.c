@@ -171,6 +171,296 @@ void write_instruction(struct instruction instr, FILE *fp) {
 				break;
 		}
 	}
+	else if (strcmp("BCS", instr.SYM)==0) {
+		//only ever rel
+		fprintf(fp, "%c", 0xB0);
+	}
+	else if (strcmp("CPY", instr.SYM)==0) {
+		switch (instr.mode) {
+			case IMM:
+				fprintf(fp, "%c", 0xC0);
+				break;
+			case ZP_REL:
+				fprintf(fp, "%c", 0xC4);
+				break;
+			case ABS:
+				fprintf(fp, "%c", 0xCC);
+				break;
+			default:
+				printf("error writing CPY: invalid mode %d", instr.mode);
+				break;
+		}
+	}
+	else if (strcmp("BNE", instr.SYM)==0) {
+		//only ever rel
+		fprintf(fp, "%c", 0xD0);
+	}
+	else if (strcmp("CPX", instr.SYM)==0) {
+		switch (instr.mode) {
+			case IMM:
+				fprintf(fp, "%c", 0xE0);
+				break;
+			case ZP_REL:
+				fprintf(fp, "%c", 0xE4);
+				break;
+			case ABS:
+				fprintf(fp, "%c", 0xEC);
+				break;
+			default:
+				printf("error writing CPX: invalid mode %d", instr.mode);
+				break;
+		}
+	}
+	else if (strcmp("BEQ", instr.SYM)==0) {
+		//only ever rel
+		fprintf(fp, "%c", 0xF0);
+	}
+	else if (strcmp("ORA", instr.SYM)==0) {
+		switch (instr.mode) {
+			case ZP_X_IND:
+				fprintf(fp, "%c", 0x01);
+				break;
+			case ZP_IND_Y:
+				fprintf(fp, "%c", 0x11);
+				break;
+			case ZP_REL:
+				fprintf(fp, "%c", 0x05);
+				break;
+			case IMM:
+				fprintf(fp, "%c", 0x09);
+				break;
+			case ABS:
+				fprintf(fp, "%c", 0x0D);
+				break;
+			case ZP_X:
+				fprintf(fp, "%c", 0x15);
+				break;
+			case ABS_Y:
+				fprintf(fp, "%c", 0x19);
+				break;
+			case ABS_X:
+				fprintf(fp, "%c", 0x1D);
+				break;
+			default:
+				printf("error writing ORA: invalid mode %d", instr.mode);
+				break;
+		}
+	}
+	else if (strcmp("AND", instr.SYM)==0) {
+		switch (instr.mode) {
+			case ZP_X_IND:
+				fprintf(fp, "%c", 0x21);
+				break;
+			case ZP_IND_Y:
+				fprintf(fp, "%c", 0x31);
+				break;
+			case ZP_REL:
+				fprintf(fp, "%c", 0x25);
+				break;
+			case IMM:
+				fprintf(fp, "%c", 0x29);
+				break;
+			case ABS:
+				fprintf(fp, "%c", 0x2D);
+				break;
+			case ZP_X:
+				fprintf(fp, "%c", 0x35);
+				break;
+			case ABS_Y:
+				fprintf(fp, "%c", 0x39);
+				break;
+			case ABS_X:
+				fprintf(fp, "%c", 0x3D);
+				break;
+			default:
+				printf("error writing AND: invalid mode %d", instr.mode);
+				break;
+		}
+	}
+	else if (strcmp("EOR", instr.SYM)==0) {
+		switch (instr.mode) {
+			case ZP_X_IND:
+				fprintf(fp, "%c", 0x41);
+				break;
+			case ZP_IND_Y:
+				fprintf(fp, "%c", 0x51);
+				break;
+			case ZP_REL:
+				fprintf(fp, "%c", 0x45);
+				break;
+			case IMM:
+				fprintf(fp, "%c", 0x49);
+				break;
+			case ABS:
+				fprintf(fp, "%c", 0x4D);
+				break;
+			case ZP_X:
+				fprintf(fp, "%c", 0x55);
+				break;
+			case ABS_Y:
+				fprintf(fp, "%c", 0x59);
+				break;
+			case ABS_X:
+				fprintf(fp, "%c", 0x5D);
+				break;
+			default:
+				printf("error writing EOR: invalid mode %d", instr.mode);
+				break;
+		}
+	}
+	else if (strcmp("ADC", instr.SYM)==0) {
+		switch (instr.mode) {
+			case ZP_X_IND:
+				fprintf(fp, "%c", 0x61);
+				break;
+			case ZP_IND_Y:
+				fprintf(fp, "%c", 0x71);
+				break;
+			case ZP_REL:
+				fprintf(fp, "%c", 0x65);
+				break;
+			case IMM:
+				fprintf(fp, "%c", 0x69);
+				break;
+			case ABS:
+				fprintf(fp, "%c", 0x6D);
+				break;
+			case ZP_X:
+				fprintf(fp, "%c", 0x75);
+				break;
+			case ABS_Y:
+				fprintf(fp, "%c", 0x79);
+				break;
+			case ABS_X:
+				fprintf(fp, "%c", 0x7D);
+				break;
+			default:
+				printf("error writing ADC: invalid mode %d", instr.mode);
+				break;
+		}
+	}
+	else if (strcmp("STA", instr.SYM)==0) {
+		switch (instr.mode) {
+			case ZP_X_IND:
+				fprintf(fp, "%c", 0x81);
+				break;
+			case ZP_IND_Y:
+				fprintf(fp, "%c", 0x91);
+				break;
+			case ZP_REL:
+				fprintf(fp, "%c", 0x85);
+				break;
+			case ABS:
+				fprintf(fp, "%c", 0x8D);
+				break;
+			case ZP_X:
+				fprintf(fp, "%c", 0x95);
+				break;
+			case ABS_Y:
+				fprintf(fp, "%c", 0x99);
+				break;
+			case ABS_X:
+				fprintf(fp, "%c", 0x9D);
+				break;
+			default:
+				printf("error writing STA: invalid mode %d", instr.mode);
+				break;
+		}
+	}
+	else if (strcmp("LDA", instr.SYM)==0) {
+		switch (instr.mode) {
+			case ZP_X_IND:
+				fprintf(fp, "%c", 0xA1);
+				break;
+			case ZP_IND_Y:
+				fprintf(fp, "%c", 0xB1);
+				break;
+			case ZP_REL:
+				fprintf(fp, "%c", 0xA5);
+				break;
+			case IMM:
+				fprintf(fp, "%c", 0xA9);
+				break;
+			case ABS:
+				fprintf(fp, "%c", 0xAD);
+				break;
+			case ZP_X:
+				fprintf(fp, "%c", 0xB5);
+				break;
+			case ABS_Y:
+				fprintf(fp, "%c", 0xB9);
+				break;
+			case ABS_X:
+				fprintf(fp, "%c", 0xBD);
+				break;
+			default:
+				printf("error writing LDA: invalid mode %d", instr.mode);
+				break;
+		}
+	}
+	else if (strcmp("CMP", instr.SYM)==0) {
+		switch (instr.mode) {
+			case ZP_X_IND:
+				fprintf(fp, "%c", 0xC1);
+				break;
+			case ZP_IND_Y:
+				fprintf(fp, "%c", 0xD1);
+				break;
+			case ZP_REL:
+				fprintf(fp, "%c", 0xC5);
+				break;
+			case IMM:
+				fprintf(fp, "%c", 0xC9);
+				break;
+			case ABS:
+				fprintf(fp, "%c", 0xCD);
+				break;
+			case ZP_X:
+				fprintf(fp, "%c", 0xD5);
+				break;
+			case ABS_Y:
+				fprintf(fp, "%c", 0xD9);
+				break;
+			case ABS_X:
+				fprintf(fp, "%c", 0xDD);
+				break;
+			default:
+				printf("error writing CMP: invalid mode %d", instr.mode);
+				break;
+		}
+	}
+	else if (strcmp("SBC", instr.SYM)==0) {
+		switch (instr.mode) {
+			case ZP_X_IND:
+				fprintf(fp, "%c", 0xE1);
+				break;
+			case ZP_IND_Y:
+				fprintf(fp, "%c", 0xF1);
+				break;
+			case ZP_REL:
+				fprintf(fp, "%c", 0xE5);
+				break;
+			case IMM:
+				fprintf(fp, "%c", 0xE9);
+				break;
+			case ABS:
+				fprintf(fp, "%c", 0xED);
+				break;
+			case ZP_X:
+				fprintf(fp, "%c", 0xF5);
+				break;
+			case ABS_Y:
+				fprintf(fp, "%c", 0xF9);
+				break;
+			case ABS_X:
+				fprintf(fp, "%c", 0xFD);
+				break;
+			default:
+				printf("error writing SBC: invalid mode %d", instr.mode);
+				break;
+		}
+	}
+
 	else {
 			printf("error writing symbol: invalid symbol %s\n", instr.SYM);
 	}
