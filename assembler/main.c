@@ -1,4 +1,3 @@
-#define _GNU_SOURCE
 #include <stdio.h>
 #include <string.h>
 #include "./lib/slre.h"
@@ -94,13 +93,13 @@ struct instruction parse_line(char *line, FILE* fp) {
 	memcpy(operand_str, arg_cap.ptr, arg_cap.len);
 	
 	if (operand_str[0] == '$') { //hex
-		instr.operand = (short)strtol(operand_str+1, NULL, 16);
+		instr.operand = (unsigned short)strtol(operand_str+1, NULL, 16);
 	}
 	else if (operand_str[0] == '%') { //bin
-		instr.operand = (short)strtol(operand_str+1, NULL, 2);
+		instr.operand = (unsigned short)strtol(operand_str+1, NULL, 2);
 	}
 	else { //dec
-		instr.operand = (short)strtol(operand_str, NULL, 10);
+		instr.operand = (unsigned short)strtol(operand_str, NULL, 10);
 	}
 
 	printf("opstr: %s -> val: %d\n", operand_str, instr.operand);
