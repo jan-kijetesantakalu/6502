@@ -3,6 +3,7 @@
 #include <string.h>
 #include "./lib/slre.h"
 #include <stdlib.h>
+#include <stdbool.h>
 
 #define LINE_SIZE 64
 
@@ -35,8 +36,7 @@ struct instruction parse_line(char *line, FILE* fp) {
 	
 	struct slre_cap arg_cap;
 	
-	struct instruction instr;
-
+	struct instruction instr = {{0},0,0};
 	memcpy(instr.SYM, SYM_cap.ptr, 3);
 
 	if (slre_match("\\s#(\\S*)\\s*$", line, strlen(line), &arg_cap, 1, SLRE_IGNORE_CASE) > 0) {
@@ -108,7 +108,8 @@ int main(int argc, char **argv) {
 	while (fgets(line, LINE_SIZE+1, asmrawfp) != NULL) {
 		line[strlen(line)-1]='\0';
 		printf("parsing line:\n[\n%s\n]\n", line);
-		struct instruction data = parse_line(line, binfp);
+		struct instruction parsed_line = parse_line(line, binfp);
+		printf("instruction %s, with mode %d, and data %d\n", parsed_line.SYM, parsed_line.mode, parsed_line.operand);
 	}
 
 	fclose(asmrawfp);
