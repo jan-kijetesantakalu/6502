@@ -103,8 +103,14 @@ struct instruction parse_line(char *line, FILE* fp) {
 	}
 
 	printf("opstr: %s -> val: %d\n", operand_str, instr.operand);
+	
+	free(operand_str);
 
 	return instr;
+}
+
+void write_instruction(struct instruction instr, FILE *fp) {
+
 }
 
 int main(int argc, char **argv) {
