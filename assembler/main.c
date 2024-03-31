@@ -813,7 +813,8 @@ int main(int argc, char **argv) {
 
 	char line[LINE_SIZE];
 	while (fgets(line, LINE_SIZE+1, asmrawfp) != NULL) {
-		line[strlen(line)-1]='\0';
+		if (line[strlen(line)-1] == '\n')
+			line[strlen(line)-1]='\0';
 		printf("parsing line:\n[\n%s\n]\n", line);
 		struct instruction parsed_line = parse_line(line);
 		if (parsed_line.mode == -1) {
