@@ -29,13 +29,15 @@ struct instruction {
 
 struct instruction parse_line(char *line) {
 	struct slre_cap SYM_cap;
-	if (slre_match("([A-Z][A-Z][A-Z])", line, strlen(line), &SYM_cap, 1, SLRE_IGNORE_CASE) < 0)
-		exit(-1);
+	struct instruction instr = {{0},0,0};
+	if (slre_match("([A-Z][A-Z][A-Z])", line, strlen(line), &SYM_cap, 1, SLRE_IGNORE_CASE) < 0) {
+		instr.mode = -1;
+		return instr;
+	}
 	printf("found symbol: [%.*s]\n", SYM_cap.len, SYM_cap.ptr);
 	
 	struct slre_cap arg_cap;
 	
-	struct instruction instr = {{0},0,0};
 	memcpy(instr.SYM, SYM_cap.ptr, 3);
 	
 	//FIND ADDRESSIGN MODE WITH REGEX
@@ -804,6 +806,10 @@ int main(int argc, char **argv) {
 		line[strlen(line)-1]='\0';
 		printf("parsing line:\n[\n%s\n]\n", line);
 		struct instruction parsed_line = parse_line(line);
+		if (parsed_line.mode == -1) {
+			printf("invalid line, continuing\n");
+			continue;
+		}
 		printf("instruction %s, with mode %d, and data %d\n", parsed_line.SYM, parsed_line.mode, parsed_line.operand);
 		write_instruction(parsed_line, binfp);
 	}
