@@ -1,7 +1,8 @@
-LDA #$A0 
+LDA #$A0 ; i am a comment 
 ADC #31
 STA $AB
 ADC #%00000001
+; TESTSTEST
 LDX $AB
 INX
 LDA #2
