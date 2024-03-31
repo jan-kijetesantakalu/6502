@@ -774,6 +774,10 @@ void write_instruction(struct instruction instr, FILE *fp) {
 		case ABS:
 			fprintf(fp, "%c%c", instr.operand & 0xFF, (instr.operand>>8) & 0xFF);
 			break;	
+		case IMP:
+			break;
+		default:
+			printf("error wrtiting in mode %d: invalid mode\n", instr.mode);
 	}
 	return;
 }
