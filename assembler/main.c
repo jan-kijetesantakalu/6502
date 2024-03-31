@@ -599,7 +599,105 @@ void write_instruction(struct instruction instr, FILE *fp) {
 				break;
 		}	
 	}	
+	else if (strcmp("STX", instr.SYM)==0) {
+		switch (instr.mode) {
+			case ZP_REL:
+				fprintf(fp, "%c", 0x86);
+				break;
+			case ABS:
+				fprintf(fp, "%c", 0x8E);
+				break;
+			case ZP_Y:
+				fprintf(fp, "%c", 0x96);
+				break;
+			default:
+				printf("error writing STX: invalid mode %d", instr.mode);
+				break;
+		}
 		
+	}
+	else if (strcmp("DEC", instr.SYM)==0) {
+		switch (instr.mode) {
+			case ZP_REL:
+				fprintf(fp, "%c", 0xC6);
+				break;
+			case ABS:
+				fprintf(fp, "%c", 0xCE);
+				break;
+			case ZP_X:
+				fprintf(fp, "%c", 0xD6);
+				break;
+			case ABS_X:
+				fprintf(fp, "%c", 0xDE);
+				break;
+			default:
+				printf("error writing symbol DEC: invalid mode %d", instr.mode);
+				break;
+		}
+	}
+	else if (strcmp("INC", instr.SYM)==0) {
+		switch (instr.mode) {
+                        case ZP_REL:
+                                fprintf(fp, "%c", 0xE6);
+                                break;
+                        case ABS:
+                                fprintf(fp, "%c", 0xEE);
+                                break;
+                        case ZP_X:
+                                fprintf(fp, "%c", 0xF6);
+                                break;
+                        case ABS_X:
+                                fprintf(fp, "%c", 0xFE);
+                                break;
+                        default:
+                                printf("error writing symbol INC: invalid mode %d", instr.mode);
+                                break;
+                }
+	}
+	else if (strcmp("PHP", instr.SYM)==0) {
+		//only ever IMP
+		fprintf(fp, "%c", 0x08);
+	}	
+	else if (strcmp("CLC", instr.SYM)==0) {
+		//only ever IMP
+		fprintf(fp, "%c", 0x18);
+	}
+	else if (strcmp("PLP", instr.SYM)==0) {
+		//only ever IMP
+		fprintf(fp, "%c", 0x28);
+	}
+	else if (strcmp("SEC", instr.SYM)==0) {
+		//only ever IMP
+		fprintf(fp, "%c", 0x38);
+	}
+	else if (strcmp("PHA", instr.SYM)==0) {
+		//only ever IMP
+		fprintf(fp, "%c", 0x48);
+	}
+	else if (strcmp("CLI", instr.SYM)==0) {
+		//only ever IMP
+		fprintf(fp, "%c", 0x58);
+	}
+	else if (strcmp("PLA", instr.SYM)==0) {
+		//only ever IMP
+		fprintf(fp, "%c", 0x68);
+	}
+	else if (strcmp("SEI", instr.SYM)==0) {
+		//only ever IMP
+		fprintf(fp, "%c", 0x78);
+	}
+	else if (strcmp("DEY", instr.SYM)==0) {
+		//only ever IMP
+		fprintf(fp, "%c", 0x88);
+	}
+	else if (strcmp("TYA", instr.SYM)==0) {
+		//only ever IMP
+		fprintf(fp, "%c", 0x98);
+	}
+	else if (strcmp("TAY", instr.SYM)==0) {
+		//only ever IMP
+		fprintf(fp, "%c", 0xA8);
+	}	
 	else {
 		printf("error writing symbol: invalid symbol %s\n", instr.SYM);
 	}
