@@ -697,7 +697,64 @@ void write_instruction(struct instruction instr, FILE *fp) {
 	else if (strcmp("TAY", instr.SYM)==0) {
 		//only ever IMP
 		fprintf(fp, "%c", 0xA8);
-	}	
+	}
+	else if (strcmp("CLV", instr.SYM)==0) {
+		//only ever IMP
+		fprintf(fp, "%c", 0xB8);
+	}
+	else if (strcmp("INY", instr.SYM)==0) {
+		//only ever IMP
+		fprintf(fp, "%c", 0xC8);
+	}
+	else if (strcmp("CLD", instr.SYM)==0) {
+		//only ever IMP
+		fprintf(fp, "%c", 0xD8);
+	}
+	else if (strcmp("INX", instr.SYM)==0) {
+		//only ever IMP
+		fprintf(fp, "%c", 0xE8);
+	}
+	else if (strcmp("SED", instr.SYM)==0) {
+		//only ever IMP
+		fprintf(fp, "%c", 0xF8);
+	}
+	else if (strcmp("TXA", instr.SYM)==0) {
+		//only ever IMP
+		fprintf(fp, "%c", 0x8A);
+	}
+	else if (strcmp("TXS", instr.SYM)==0) {
+		//only ever IMP
+		fprintf(fp, "%c", 0x9A);
+	}
+	else if (strcmp("TAX", instr.SYM)==0) {
+		//only ever IMP
+		fprintf(fp, "%c", 0xAA);
+	}
+	else if (strcmp("TSX", instr.SYM)==0) {
+		//only ever IMP
+		fprintf(fp, "%c", 0xBA);
+	}
+	else if (strcmp("DEX", instr.SYM)==0) {
+		//only ever IMP
+		fprintf(fp, "%c", 0xCA);
+	}
+	else if (strcmp("NOP", instr.SYM)==0) {
+		fprintf(fp, "%c", 0xEA);
+	}
+	else if (strcmp("JMP", instr.SYM)==0) {
+		switch(instr.mode) {
+			case ABS:
+				fprintf(fp, "%c", 0x4C);
+				break;
+			case IND:
+				fprintf(fp, "%c", 0x6C);
+				break;
+			default:
+				printf("error writing JMP: invalid mode %d", instr.mode);
+				break;
+		}
+	}
+	
 	else {
 		printf("error writing symbol: invalid symbol %s\n", instr.SYM);
 	}
