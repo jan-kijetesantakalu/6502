@@ -757,7 +757,25 @@ void write_instruction(struct instruction instr, FILE *fp) {
 	
 	else {
 		printf("error writing symbol: invalid symbol %s\n", instr.SYM);
+		return;
 	}
+	switch (instr.mode) {
+		case ZP_REL:
+		case ZP_X:
+		case ZP_Y:
+		case ZP_X_IND:
+		case ZP_IND_Y:
+		case IMM:
+			fprintf(fp, "%c", instr.operand & 0xFF);
+			break;
+		case IND:
+		case ABS_X:
+		case ABS_Y:
+		case ABS:
+			fprintf(fp, "%c%c", instr.operand & 0xFF, (instr.operand>>8) & 0xFF);
+			break;	
+	}
+	return;
 }
 
 int main(int argc, char **argv) {
