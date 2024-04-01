@@ -31,14 +31,22 @@ struct instruction parse_line(char *line) {
 	struct slre_cap SYM_cap;
 	struct instruction instr = {{0},0,0};
 	
-	struct slre_cap COMMENT;
-	
 	unsigned char comment;
 
 	comment = slre_match(";", line, strlen(line), NULL, 0, 0) -1;
 	if (comment >= 0)
 		line[comment] = '\0';	
 	printf("removed comments: [%s]\n", line);
+
+	struct slre_cap label_cap;
+
+	label = slre_match("([A-Z]+):", line, strlen(line), label_cap, 1, SLRE_IGNORE_CASE);
+	if (label >= 0) {
+		//Matched label
+		printf("found label: [%.*s]\n");
+		
+	}
+
 
 	if (slre_match("([A-Z][A-Z][A-Z])", line, strlen(line), &SYM_cap, 1, SLRE_IGNORE_CASE) < 0) {
 		instr.mode = -1;
