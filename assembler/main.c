@@ -850,7 +850,7 @@ int main(int argc, char **argv) {
 	char line[LINE_SIZE];
 	struct scope scope = {{{}},{{}},0, 0};
 
-	while (fgets(line, LINE_SIZE+1, asmrawfp) != NULL) {
+	while (fgets(line, LINE_SIZE, asmrawfp) != NULL) {
 		if (line[strlen(line)-1] == '\n')
 			line[strlen(line)-1]='\0';
 		printf("parsing line:\n[\n%s\n]\n", line);
