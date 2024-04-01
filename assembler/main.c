@@ -82,6 +82,11 @@ struct instruction parse_line(char *line, FILE *fp, struct scope *scope) {
 	if (slre_match("[A-Z][A-Z][A-Z]\\s([A-Z]+)\\s*$", line , strlen(line), &arg_cap, 1, SLRE_IGNORE_CASE) > 0) {
 		printf("found label [%.*s]\n", arg_cap.len, arg_cap.ptr);
 		instr.mode = ABS;
+		scope->inst[scope->insts].id = calloc((arg_cap.len+1),sizeof(char));
+		scope->inst[scope->insts].offset = ftell(fp)+1;
+		memcpy(scope->inst[scope->insts].id, arg_cap.ptr, arg_cap.len);
+		scope->insts++;
+		printf("instanced label %d : [[%s]->[%d]] | next instance no: %d\n", scope->insts-1, scope->inst[scope->insts-1].id, scope->inst[scope->insts-1].offset, scope->insts);
 	}
 	else if (slre_match("\\s#(\\S*)\\s*$", line, strlen(line), &arg_cap, 1, SLRE_IGNORE_CASE) > 0) {
 		printf("found imm: [%.*s]\n", arg_cap.len, arg_cap.ptr);
@@ -857,6 +862,23 @@ int main(int argc, char **argv) {
 	}
 
 	fclose(asmrawfp);
+
+	printf("\nLABEL POSTPROCESSING:\n");
+	
+	for (int i = 0; i < scope.insts; ++i) {
+		printf("label instance [%d]: id [%s] @ [%d]\n", i, scope.inst[i].id, scope.inst[i].offset);
+		for (int d = 0; d < scope.defns; ++d) {
+			if (strcmp(scope.defn[d].id, scope.inst[i].id)==0) {
+				printf("matched instance [%d] with definition [%d] : [%s] -> [%d]\n", i, d, scope.defn[d].id, scope.defn[d].offset);
+				fseek(binfp, scope.inst[i].offset, SEEK_SET);
+				unsigned char data[2] = {(scope.defn[d].offset) & 0xFF, (scope.defn[d].offset >>8) & 0xFF};
+				fwrite(data, sizeof(char), 2, binfp);
+				printf("written [%02x%02x] to [%d]", data[0], data[1], scope.inst[i].offset);
+			}
+		}
+	}
+
+	fclose(binfp);
 	return 0;
 }
 
