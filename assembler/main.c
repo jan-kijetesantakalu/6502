@@ -831,20 +831,36 @@ void write_instruction(struct instruction instr, FILE *fp) {
 }
 
 int main(int argc, char **argv) {
-	if (argc != 3) {
-		printf("Usage: %s {input}.asm {output}.bin", argv[0]);
+	FILE *asmrawfp;
+	FILE *binfp;
+	if (argc == 1 || argc > 3) {
+		printf("Usage: %s {input}.asm [{output}.bin]\n", argv[0]);
 		return -1;
 	}
-	FILE *asmrawfp = fopen(argv[1], "r");
-	if (asmrawfp == NULL) {
-		printf("NULL FP");	
-		return -1;
-	}
+	else if (argc == 3) {
+		asmrawfp = fopen(argv[1], "r");
+		if (asmrawfp == NULL) {
+			printf("NULL FP\n");	
+			return -1;
+		}
 	
-	FILE *binfp = fopen(argv[2], "wb");
-	if (binfp == NULL) {
-		printf("NULL FP");
-		return -1;
+		binfp = fopen(argv[2], "wb");
+		if (binfp == NULL) {
+			printf("NULL FP\n");
+			return -1;
+		}
+	}
+	else {
+		asmrawfp = fopen(argv[1], "r");
+		if (asmrawfp == NULL) {
+			printf("NULL FP\n");
+			return -1;
+		}
+		binfp = fopen("asm.bin", "wb");
+		if (binfp == NULL) {
+			printf("NULL FP\n");
+			return -1;
+		}
 	}
 
 	char line[LINE_SIZE];
@@ -879,6 +895,7 @@ int main(int argc, char **argv) {
 	}
 
 	fclose(binfp);
+	
 	return 0;
 }
 
