@@ -26,8 +26,20 @@ struct instruction {
 	unsigned short operand;
 };
 
+struct label { //e.g. loop: *****
+	char *id; //"loop"
+	int offset;
+};
 
-struct instruction parse_line(char *line) {
+struct scope {
+	struct label defn[255];
+	struct label inst[255];
+	int defns;
+	int insts;
+};
+
+
+struct instruction parse_line(char *line, FILE *fp, struct scope *scope) {
 	struct slre_cap SYM_cap;
 	struct instruction instr = {{0},0,0};
 	
@@ -40,17 +52,19 @@ struct instruction parse_line(char *line) {
 
 	struct slre_cap label_cap;
 	
-	int label;
-
-	label = slre_match("([A-Z]+):", line, strlen(line), &label_cap, 1, SLRE_IGNORE_CASE);
-	printf("%d | %d\n", label, strlen(line));
+	int label = slre_match("([A-Z]+):", line, strlen(line), &label_cap, 1, SLRE_IGNORE_CASE);
 	if (label >= 0) {
 		//Matched label
-		printf("found label: [%.*s]\n", label_cap.len, label_cap.ptr);
+		fseek(fp, 0, SEEK_END);
+		scope->defn[scope->defns].id = calloc((label_cap.len+1), sizeof(char));
+		scope->defn[scope->defns].offset = ftell(fp);
+		memcpy(scope->defn[scope->defns].id, label_cap.ptr, label_cap.len);
+		scope->defns++;
+		printf("defined label %d -> [[%s]->[%d]] | next defn no: %d\n", scope->defns-1, scope->defn[scope->defns-1].id, scope->defn[scope->defns-1].offset, scope->defns);
 		instr.mode = -1;
 		return instr;		
 	}
-
+	
 
 	if (slre_match("([A-Z][A-Z][A-Z])", line, strlen(line), &SYM_cap, 1, SLRE_IGNORE_CASE) < 0) {
 		instr.mode = -1;
@@ -64,8 +78,12 @@ struct instruction parse_line(char *line) {
 	memcpy(instr.SYM, SYM_cap.ptr, 3);
 	
 	//FIND ADDRESSIGN MODE WITH REGEX
-
-	if (slre_match("\\s#(\\S*)\\s*$", line, strlen(line), &arg_cap, 1, SLRE_IGNORE_CASE) > 0) {
+	
+	if (slre_match("[A-Z][A-Z][A-Z]\\s([A-Z]+)\\s*$", line , strlen(line), &arg_cap, 1, SLRE_IGNORE_CASE) > 0) {
+		printf("found label [%.*s]\n", arg_cap.len, arg_cap.ptr);
+		instr.mode = ABS;
+	}
+	else if (slre_match("\\s#(\\S*)\\s*$", line, strlen(line), &arg_cap, 1, SLRE_IGNORE_CASE) > 0) {
 		printf("found imm: [%.*s]\n", arg_cap.len, arg_cap.ptr);
 		instr.mode = IMM;
 	}
@@ -825,15 +843,15 @@ int main(int argc, char **argv) {
 	}
 
 	char line[LINE_SIZE];
+	struct scope scope = {{{}},{{}},0, 0};
+
 	while (fgets(line, LINE_SIZE+1, asmrawfp) != NULL) {
 		if (line[strlen(line)-1] == '\n')
 			line[strlen(line)-1]='\0';
 		printf("parsing line:\n[\n%s\n]\n", line);
-		struct instruction parsed_line = parse_line(line);
-		if (parsed_line.mode == -1) {
-			printf("invalid line, continuing\n");
+		struct instruction parsed_line = parse_line(line, binfp, &scope);
+		if (parsed_line.mode == -1)
 			continue;
-		}
 		printf("instruction %s, with mode %d, and data %d\n", parsed_line.SYM, parsed_line.mode, parsed_line.operand);
 		write_instruction(parsed_line, binfp);
 	}
