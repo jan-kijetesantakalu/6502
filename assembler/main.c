@@ -56,6 +56,7 @@ struct instruction parse_line(char *line) {
 		instr.mode = -1;
 		return instr;
 	}
+	
 	printf("found symbol: [%.*s]\n", SYM_cap.len, SYM_cap.ptr);
 	
 	struct slre_cap arg_cap;
@@ -817,7 +818,7 @@ int main(int argc, char **argv) {
 		return -1;
 	}
 	
-	FILE *binfp = fopen(argv[2], "w");
+	FILE *binfp = fopen(argv[2], "wb");
 	if (binfp == NULL) {
 		printf("NULL FP");
 		return -1;
