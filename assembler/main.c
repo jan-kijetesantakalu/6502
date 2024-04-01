@@ -31,7 +31,7 @@ struct instruction parse_line(char *line) {
 	struct slre_cap SYM_cap;
 	struct instruction instr = {{0},0,0};
 	
-	unsigned char comment;
+	int comment;
 
 	comment = slre_match(";", line, strlen(line), NULL, 0, 0) -1;
 	if (comment >= 0)
@@ -40,13 +40,15 @@ struct instruction parse_line(char *line) {
 
 	struct slre_cap label_cap;
 	
-	unsigned char label;
+	int label;
 
 	label = slre_match("([A-Z]+):", line, strlen(line), &label_cap, 1, SLRE_IGNORE_CASE);
+	printf("%d | %d\n", label, strlen(line));
 	if (label >= 0) {
 		//Matched label
 		printf("found label: [%.*s]\n", label_cap.len, label_cap.ptr);
-		
+		instr.mode = -1;
+		return instr;		
 	}
 
 
