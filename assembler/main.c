@@ -45,7 +45,7 @@ struct instruction parse_line(char *line) {
 	label = slre_match("([A-Z]+):", line, strlen(line), &label_cap, 1, SLRE_IGNORE_CASE);
 	if (label >= 0) {
 		//Matched label
-		printf("found label: [%.*s]\n");
+		printf("found label: [%.*s]\n", label_cap.len, label_cap.ptr);
 		
 	}
 
