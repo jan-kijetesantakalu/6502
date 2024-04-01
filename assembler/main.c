@@ -873,7 +873,7 @@ int main(int argc, char **argv) {
 				fseek(binfp, scope.inst[i].offset, SEEK_SET);
 				unsigned char data[2] = {(scope.defn[d].offset) & 0xFF, (scope.defn[d].offset >>8) & 0xFF};
 				fwrite(data, sizeof(char), 2, binfp);
-				printf("written [%02x%02x] to [%d]", data[0], data[1], scope.inst[i].offset);
+				printf("written [%02x%02x] to [%d]\n", data[0], data[1], scope.inst[i].offset);
 			}
 		}
 	}
