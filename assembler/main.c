@@ -39,8 +39,10 @@ struct instruction parse_line(char *line) {
 	printf("removed comments: [%s]\n", line);
 
 	struct slre_cap label_cap;
+	
+	unsigned char label;
 
-	label = slre_match("([A-Z]+):", line, strlen(line), label_cap, 1, SLRE_IGNORE_CASE);
+	label = slre_match("([A-Z]+):", line, strlen(line), &label_cap, 1, SLRE_IGNORE_CASE);
 	if (label >= 0) {
 		//Matched label
 		printf("found label: [%.*s]\n");
