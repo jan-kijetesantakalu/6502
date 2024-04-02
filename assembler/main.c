@@ -728,6 +728,12 @@ struct instruction parse_line(char *line, FILE *fp, struct scope *scope) {
 	
 	memcpy(instr.SYM, SYM_cap.ptr, 3);
 	
+	instr.SYM[0] = instr.SYM[0] & 223;
+	instr.SYM[1] = instr.SYM[1] & 223;
+	instr.SYM[2] = instr.SYM[2] & 223;
+
+	printf("symbol: [%s]\n", instr.SYM);
+
 	//FIND ADDRESSIGN MODE WITH REGEX
 	
 	if (slre_match("[A-Z][A-Z][A-Z]\\s([A-Z]+)\\s*$", line , strlen(line), &arg_cap, 1, SLRE_IGNORE_CASE) > 0) {
