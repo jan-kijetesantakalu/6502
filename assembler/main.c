@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-#define LINE_SIZE 64
+#define LINE_SIZE 256
 
 enum mode {
 	IMM,
