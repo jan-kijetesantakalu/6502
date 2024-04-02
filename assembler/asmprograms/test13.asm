@@ -37,3 +37,21 @@ initSnake:
   sta $13 ; body segment 1
   sta $15 ; body segment 2
   rts
+
+
+generateApplePosition:
+  ;load a new random byte into $00
+  lda $fe
+  sta $00
+
+  ;load a new random number from 2 to 5 into $01
+  lda $fe
+  and #$03 ;mask out lowest 2 bits
+  clc
+  adc #2
+  sta $01
+
+  rts
+
+loop:
+  jsr readKeys
