@@ -757,10 +757,6 @@ struct instruction parse_line(char *line, FILE *fp, struct scope *scope) {
 		printf("found zp/rel: [%.*s]\n", arg_cap.len, arg_cap.ptr);
 		instr.mode = ZP_REL;
 	}
-	else if (slre_match("\\s\\((\\$?%?\\S\\S[a-z]|[0-9]\\S)\\)\\s*$", line, strlen(line), &arg_cap, 1, SLRE_IGNORE_CASE) > 0) {
-		printf("found ind addr: [%.*s]\n", arg_cap.len, arg_cap.ptr);
-		instr.mode = IND;
-	}
 	else if (slre_match("\\s(\\$?%?\\S\\S\\S\\S),X\\s*$", line, strlen(line), &arg_cap, 1, SLRE_IGNORE_CASE) > 0) {
 		printf("found abs idx X: [%.*s]\n", arg_cap.len, arg_cap.ptr);
 		instr.mode = ABS_X;
@@ -784,6 +780,10 @@ struct instruction parse_line(char *line, FILE *fp, struct scope *scope) {
 	else if (slre_match("\\s\\((\\$?%?\\S\\S)\\),Y\\s*$", line, strlen(line), &arg_cap, 1, SLRE_IGNORE_CASE) > 0) {
 		printf("found zp ind idx Y: [%.*s]\n", arg_cap.len, arg_cap.ptr);
 		instr.mode = ZP_IND_Y;
+	}
+	else if (slre_match("\\s\\((\\$?%?\\S\\S\\S\\S)\\)\\s*$", line, strlen(line), &arg_cap, 1, SLRE_IGNORE_CASE) > 0) { //if check earlier then will match ,X as \\S\\S
+		printf("found ind addr: [%.*s]\n", arg_cap.len, arg_cap.ptr);
+		instr.mode = IND;
 	}
 	else {
 		printf("found no arguments, impl\n");
