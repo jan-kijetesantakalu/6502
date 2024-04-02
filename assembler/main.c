@@ -757,7 +757,7 @@ struct instruction parse_line(char *line, FILE *fp, struct scope *scope) {
 		printf("found zp/rel: [%.*s]\n", arg_cap.len, arg_cap.ptr);
 		instr.mode = ZP_REL;
 	}
-	else if (slre_match("\\s\\((\\$?%?\\S\\S\\S\\S)\\)\\s*$", line, strlen(line), &arg_cap, 1, SLRE_IGNORE_CASE) > 0) {
+	else if (slre_match("\\s\\((\\$?%?\\S\\S[a-z]|[0-9]\\S)\\)\\s*$", line, strlen(line), &arg_cap, 1, SLRE_IGNORE_CASE) > 0) {
 		printf("found ind addr: [%.*s]\n", arg_cap.len, arg_cap.ptr);
 		instr.mode = IND;
 	}
