@@ -15,6 +15,7 @@ if __name__ == "__main__":
     print("running tests:")
     keep = []
     for test in tests:
+            print(f"(./asm.exe {test} {os.path.split(test)[-1].split('.')[-2]}.bin.tmp) >> ./{os.path.split(test)[-1].split('.')[-2]}.tmp")
         os.system(f"(./asm.exe {test} {os.path.split(test)[-1].split('.')[-2]}.bin.tmp) >> ./{os.path.split(test)[-1].split('.')[-2]}.tmp")
         with open(os.path.split(test)[-1].split('.')[-2] +".bin.tmp", 'rb') as f:
             tested = False
