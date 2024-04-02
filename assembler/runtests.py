@@ -3,10 +3,14 @@ import glob
 import os
 
 if __name__ == "__main__":
+    print("cleaning old log files")
+    for f in glob.glob("*.log"):
+        print(f"\033[096mrm'ing {f}")
+        os.system(f"rm {f}")
     testdir = "./asmprograms/" if len(sys.argv) < 2 else sys.argv[1]
     tests = glob.glob(testdir + "*.asm")
     anss = glob.glob(testdir + "*.bin.ans")
-    print("making:")
+    print("\033[0mmaking:")
     os.system("make")
     print("running tests:")
     keep = []
@@ -30,8 +34,8 @@ if __name__ == "__main__":
     print("\033[0mcleaning up:")
     for f in glob.glob("*.tmp"):
         if f in keep:
-            print(f"\033[96mkeeping failed test {f} as {'.'.join(f.split('.')[:-1])}")
-            os.system(f'mv {f} {".".join(f.split(".")[:-1])}')
+            print(f"\033[96mkeeping failed test {f} as {'.'.join(f.split('.')[:-1])}.log")
+            os.system(f'mv {f} {".".join(f.split(".")[:-1])}.log')
             continue
         print(f"\033[96mrm'ing {f}")
         os.system(f"rm {f}")
