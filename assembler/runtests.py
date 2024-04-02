@@ -15,22 +15,22 @@ if __name__ == "__main__":
     print("running tests:")
     keep = []
     for test in tests:
-        os.system(f"(./asm.exe {test} {test.split('/')[-1].split('.')[-2]}.bin.tmp) >> ./log{test.split('/')[-1].split('.')[-2]}.tmp")
-        with open(test.split('/')[-1].split('.')[-2] +".bin.tmp", 'rb') as f:
+        os.system(f"(./asm.exe {test} {os.path.split(test)[-1].split('.')[-2]}.bin.tmp) >> ./{os.path.split(test)[-1].split('.')[-2]}.tmp")
+        with open(os.path.split(test)[-1].split('.')[-2] +".bin.tmp", 'rb') as f:
             tested = False
             for ans in anss:
-                if ans.split('/')[-1].split('.')[-3] == test.split('/')[-1].split('.')[-2]:
+                if os.path.split(ans)[-1].split('.')[-3] == os.path.split(test)[-1].split('.')[-2]:
                     tested = True
                     with open(ans, 'rb') as fa:
                         if (fa.read() == f.read()):
                             print(f"\033[92m{test} passed")
                         else:
                             print(f"\033[91m{test} failed")
-                            keep.append(test.split('/')[-1].split('.')[-2] + '.bin.tmp')
-                            keep.append('log'+test.split('/')[-1].split('.')[-2] + '.tmp')
+                            keep.append(os.path.split(test)[-1].split('.')[-2] + '.bin.tmp')
+                            keep.append(os.path.split(test)[-1].split('.')[-2] + '.tmp')
             if tested:
                 continue
-            print(f"\033[93m{test} answer [{testdir + test.split('/')[-1].split('.')[-2]+'.bin.ans'}] not found")
+            print(f"\033[93m{test} answer [{testdir + os.path.split(test)[-1].split('.')[-2]+'.bin.ans'}] not found")
     print("\033[0mcleaning up:")
     for f in glob.glob("*.tmp"):
         if f in keep:
