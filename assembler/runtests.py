@@ -11,7 +11,7 @@ if __name__ == "__main__":
     print("running tests:")
     keep = []
     for test in tests:
-        os.system(f"(./asm.exe {test} {test.split('/')[-1].split('.')[-2]}.bin.tmp) >> ./log.tmp")
+        os.system(f"(./asm.exe {test} {test.split('/')[-1].split('.')[-2]}.bin.tmp) >> ./log{test.split('/')[-1].split('.')[-2]}.tmp")
         with open(test.split('/')[-1].split('.')[-2] +".bin.tmp", 'rb') as f:
             tested = False
             for ans in anss:
@@ -23,6 +23,7 @@ if __name__ == "__main__":
                         else:
                             print(f"\033[91m{test} failed")
                             keep.append(test.split('/')[-1].split('.')[-2] + '.bin.tmp')
+                            keep.append('log'+test.split('/')[-1].split('.')[-2] + '.tmp')
             if tested:
                 continue
             print(f"\033[93m{test} answer [{testdir + test.split('/')[-1].split('.')[-2]+'.bin.ans'}] not found")
