@@ -55,3 +55,19 @@ generateApplePosition:
 
 loop:
   jsr readKeys
+readKeys:
+  lda $ff
+  cmp #$77
+  beq upKey
+  
+
+upKey:
+  lda #4
+  bit $02
+  bne illegalMove
+  lda #1
+  sta $02
+  rts
+
+illegalMove:
+  rts
