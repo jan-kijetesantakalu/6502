@@ -59,7 +59,7 @@ Subtr:
 	STA	$F3		; save remainder high byte
 
 	INC	$F6		; increment $F6
-Next
+Next:
 	DEX			; decrement bit pair count
 	BNE	Loop		; loop if not all done
 
