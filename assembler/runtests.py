@@ -7,7 +7,10 @@ if __name__ == "__main__":
     print("cleaning old log files")
     for f in glob.glob("*.log"):
         print(f"\033[096mrm'ing {f}")
-        os.system(f"rm {f}")
+        if "windows" in platform.system().lower():
+            os.system(f"del {f}")
+        else:
+            os.system(f"rm {f}")
     testdir = "./asmprograms/" if len(sys.argv) < 2 else sys.argv[1]
     tests = glob.glob(testdir + "*.asm")
     anss = glob.glob(testdir + "*.bin.ans")
@@ -39,8 +42,14 @@ if __name__ == "__main__":
     for f in glob.glob("*.tmp"):
         if f in keep:
             print(f"\033[96mkeeping failed test {f} as {'.'.join(f.split('.')[:-1])}.log")
-            os.system(f'mv {f} {".".join(f.split(".")[:-1])}.log')
+            if "windows" in platform.system().lower():
+                os.system(f'move {f} {".".join(f.split(".")[:-1])}.log')
+            else:
+                os.system(f'mv {f} {".".join(f.split(".")[:-1])}.log')
             continue
         print(f"\033[96mrm'ing {f}")
-        os.system(f"rm {f}")
+        if "windows" in platform.system().lower():
+            os.system(f"del {f}")
+        else:
+            os.system(f"rm {f}")
     print("\033[0mcomplete")
