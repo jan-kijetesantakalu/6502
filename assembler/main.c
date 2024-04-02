@@ -734,7 +734,7 @@ struct instruction parse_line(char *line, FILE *fp, struct scope *scope) {
 		printf("found label [%.*s]\n", arg_cap.len, arg_cap.ptr);
 		instr.mode = ABS;
 		scope->inst[scope->insts].bitlatch = false;
-		if ((get_opcode(instr) & 0x0F) == 0){ 
+		if (((get_opcode(instr) & 0x0F) == 0) && (get_opcode(instr) != 0x20)){ 
 			printf("using mode ZP_REL\n");
 			instr.mode = ZP_REL;
 			scope->inst[scope->insts].bitlatch = true;
