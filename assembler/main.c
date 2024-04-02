@@ -444,7 +444,7 @@ unsigned char get_opcode(struct instruction instr) {
 			case ZP_REL:
 				return ( 0x06);
 				break;
-			case IMM:
+			case IMP:
 				return ( 0x0A);
 				break;
 			case ABS:
@@ -466,7 +466,7 @@ unsigned char get_opcode(struct instruction instr) {
 			case ZP_REL:
 				return ( 0x26);
 				break;
-			case IMM:
+			case IMP:
 				return ( 0x2A);
 				break;
 			case ABS:
@@ -488,7 +488,7 @@ unsigned char get_opcode(struct instruction instr) {
 			case ZP_REL:
 				return ( 0x46);
 				break;
-			case IMM:
+			case IMP:
 				return ( 0x4A);
 				break;
 			case ABS:
@@ -510,7 +510,7 @@ unsigned char get_opcode(struct instruction instr) {
 			case ZP_REL:
 				return ( 0x66);
 				break;
-			case IMM:
+			case IMP:
 				return ( 0x6A);
 				break;
 			case ABS:
@@ -755,10 +755,6 @@ struct instruction parse_line(char *line, FILE *fp, struct scope *scope) {
 		printf("found imm: [%.*s]\n", arg_cap.len, arg_cap.ptr);
 		instr.mode = IMM;
 	}
-	else if (slre_match("\\s(\\$?%?\\S\\S\\S\\S)\\s*$", line, strlen(line), &arg_cap, 1, SLRE_IGNORE_CASE) > 0) {	
-		printf("found abs addr: [%.*s]\n", arg_cap.len, arg_cap.ptr);
-		instr.mode = ABS;
-	}
 	else if (slre_match("\\s(\\$?%?\\S\\S)\\s*$", line, strlen(line), &arg_cap, 1, SLRE_IGNORE_CASE) > 0) {
 		printf("found zp/rel: [%.*s]\n", arg_cap.len, arg_cap.ptr);
 		instr.mode = ZP_REL;
@@ -790,6 +786,10 @@ struct instruction parse_line(char *line, FILE *fp, struct scope *scope) {
 	else if (slre_match("\\s\\((\\$?%?\\S\\S\\S\\S)\\)\\s*$", line, strlen(line), &arg_cap, 1, SLRE_IGNORE_CASE) > 0) { //if check earlier then will match ,X as \\S\\S
 		printf("found ind addr: [%.*s]\n", arg_cap.len, arg_cap.ptr);
 		instr.mode = IND;
+	}
+	else if (slre_match("\\s(\\$?%?\\S\\S\\S\\S)\\s*$", line, strlen(line), &arg_cap, 1, SLRE_IGNORE_CASE) > 0) {	//as above
+		printf("found abs addr: [%.*s]\n", arg_cap.len, arg_cap.ptr);
+		instr.mode = ABS;
 	}
 	else {
 		printf("found no arguments, impl\n");
