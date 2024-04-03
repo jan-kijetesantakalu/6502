@@ -703,7 +703,7 @@ struct instruction parse_line(char *line, FILE *fp, struct scope *scope) {
 
 	struct slre_cap label_cap;
 	
-	int label = slre_match("([A-Z]+):", line, strlen(line), &label_cap, 1, SLRE_IGNORE_CASE);
+	int label = slre_match("([A-Z_-]+):", line, strlen(line), &label_cap, 1, SLRE_IGNORE_CASE);
 	if (label >= 0) {
 		//Matched label
 		fseek(fp, 0, SEEK_END);
@@ -736,7 +736,7 @@ struct instruction parse_line(char *line, FILE *fp, struct scope *scope) {
 
 	//FIND ADDRESSIGN MODE WITH REGEX
 	
-	if (slre_match("[A-Z][A-Z][A-Z]\\s([A-Z]+)\\s*$", line , strlen(line), &arg_cap, 1, SLRE_IGNORE_CASE) > 0) {
+	if (slre_match("[A-Z][A-Z][A-Z]\\s([a-z_-]+)\\s*$", line , strlen(line), &arg_cap, 1, SLRE_IGNORE_CASE) > 0) {
 		printf("found label [%.*s]\n", arg_cap.len, arg_cap.ptr);
 		instr.mode = ABS;
 		scope->inst[scope->insts].bitlatch = false;

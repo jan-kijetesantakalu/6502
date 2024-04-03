@@ -14,17 +14,17 @@
 
 ; Index in the ACCUMULATOR
 LDA #01             ; First prime
-STA $500            ; Put A in location 500
+STA $0500            ; Put A in location 500
 
 next_value:
-    LDA $500
+    LDA $0500
     CLC
     ADC #01
     CMP #255   ; Check whether we are at maxium value of A
     BEQ end       ; We've finished
 
 check_prime:
-    STA $500    ; STORE A at location $500
+    STA $0500    ; STORE A at location $500
     LDX #01
     loop:
         INX
@@ -37,7 +37,7 @@ check_prime:
             SBC $1000    ; subtract X from A
             BEQ next_value   ; if A is zero then not prime so continue
             BPL is_multiple   ; keep subtracting if we haven't underflowed
-            LDA $500
+            LDA $0500
             JMP loop  
 
 
