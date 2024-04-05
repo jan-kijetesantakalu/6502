@@ -5,7 +5,8 @@
 #include <string.h>
 #include <bitset>
 
-void dumpmem(memory mem, unsigned short addr, unsigned short len) {
+
+void dumpmem(memory& mem, unsigned short addr, unsigned short len) {
 	int i;
 	for (i = 0; i < len; i++) {
 		if (((i % 8) == 0) && (i > 0)) 
@@ -15,6 +16,19 @@ void dumpmem(memory mem, unsigned short addr, unsigned short len) {
 	if ((i % 16) != 0) {
 		printf("\n");
 	}
+}
+
+void loadprog(memory& memory, FILE *file, bool verb) {
+	if (verb)
+		printf("Copying file into memory:\n");
+	fseek(file, 0, SEEK_END);
+	unsigned short fsize = ftell(file);
+	for (unsigned short i = 0; i < fsize; i++) {
+		fseek(file, i, SEEK_SET);
+		memory.write(i, getc(file));
+	}
+	if (verb) 
+		dumpmem(memory, 0, fsize);
 }
 
 int prompt(cpu& cpu, memory& memory, bool verb) {
@@ -27,7 +41,8 @@ int prompt(cpu& cpu, memory& memory, bool verb) {
 	//step	    [n]
 	//exit
 	//run
-	//
+	//reset
+	//loadprog
 	
 	char input[64] = {0};
 	fgets(input, 64, stdin);
@@ -41,7 +56,7 @@ int prompt(cpu& cpu, memory& memory, bool verb) {
 	}
 	
 	if (strcmp("HELP", command) == 0) {
-		printf("Commands:\n\tHELP\t\t\t\t- Displays this message\n\tDUMPREG\t\t\t\t- Prints all registers\n\tSETREG REG [VAL]\t\t- Sets a Register to VAL (default 0)\n\tDUMPMEM [FROM] [LENGTH]\t\t- Prints LEGNTH (16) bytes of memory from FROM (0000)\n\tSETMEM ADDR VAL\t\t\t- Sets the memory at ADDR to VAL\n\tSTEP [N]\t\t\t- Runs N clock cycles\n\tRUN\t\t\t\t- Runs the program, disabling this prompt\n\tRESET\t\t\t\t- Resets the CPU\n\tEXIT\t\t\t\t- Exits\n\n");
+		printf("Commands:\n\tHELP\t\t\t\t- Displays this message\n\tLOADPROG FILE\t\t\t- Loads program from FILE into 0000\n\tDUMPREG\t\t\t\t- Prints all registers\n\tSETREG REG [VAL]\t\t- Sets a Register to VAL (default 0)\n\tDUMPMEM [FROM] [LENGTH]\t\t- Prints LEGNTH (16) bytes of memory from FROM (0000)\n\tSETMEM ADDR VAL\t\t\t- Sets the memory at ADDR to VAL\n\tSTEP [N]\t\t\t- Runs N clock cycles\n\tRUN\t\t\t\t- Runs the program, disabling this prompt\n\tRESET\t\t\t\t- Resets the CPU\n\tEXIT\t\t\t\t- Exits\n\n");
 	}
 	else if (strcmp("STEP", command) == 0) {
 		int n = 1;
@@ -49,6 +64,19 @@ int prompt(cpu& cpu, memory& memory, bool verb) {
 		if (verb)
 			printf("Stepping %d times\n", n);
 		return n;
+	}
+	else if (strcmp("LOADPROG", command) == 0) {
+		char prog[64] = {0};
+		sscanf(input, "%s%s", command, prog);
+		if (verb) {
+			printf("Opening file [%s]\n", prog);
+		}
+		FILE *file = fopen(prog, "rb");
+		if (file == NULL) {
+			printf("File %s not found\n", prog);
+			return 0;
+		}
+		loadprog(memory, file, verb);
 	}
 	else if (strcmp("RESET", command) == 0) {
 		cpu.reset();
@@ -216,6 +244,9 @@ int main(int argc, char **argv) {
 		}
 		else {
 			file = fopen(argv[i], "rb"); 
+			if (file == NULL) {
+				printf("File %s not found\n", argv[i]);	
+			}
 		}
 	}
 	
@@ -228,19 +259,10 @@ int main(int argc, char **argv) {
 	cpu cpu(memory);
 
 	if (file != NULL) {
-		if (verb)
-			printf("Copying file into memory:\n");
-		fseek(file, 0, SEEK_END);
-		unsigned short fsize = ftell(file);
-		for (unsigned short i; i < fsize; i++) {
-			fseek(file, i, SEEK_SET);
-			memory.write(i, getc(file));
-		}
-		if (verb) 
-			dumpmem(memory, 0, fsize);
+		loadprog(memory, file, verb);
+		printf("\n");
 	}
-	printf("\n");
-	
+
 	if (start) {
 		if (verb)
 			printf("Writing start location [%04X] to memory\n", start);
