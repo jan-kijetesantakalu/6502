@@ -41,7 +41,7 @@ int prompt(cpu& cpu, memory& memory, bool verb) {
 	}
 	
 	if (strcmp("HELP", command) == 0) {
-		printf("Commands:\n\tHELP - Displays this message\n\tDUMPREG - Prints all registers\n\tSETREG REG [VAL] - Sets a Register to VAL (default 0)\n\tDUMPMEM [FROM] [LENGTH] - Prints LEGNTH (16) bytes of memory from FROM (0000)\n\tSETMEM ADDR VAL - Sets the memory at ADDR to VAL\n\tSTEP [N] - Runs N clock cycles\n\tRUN - Runs the program, disabling this prompt\n\tRESET - Resets the CPU\n\tEXIT - Exits\n\n");
+		printf("Commands:\n\tHELP\t\t\t\t- Displays this message\n\tDUMPREG\t\t\t\t- Prints all registers\n\tSETREG REG [VAL]\t\t- Sets a Register to VAL (default 0)\n\tDUMPMEM [FROM] [LENGTH]\t\t- Prints LEGNTH (16) bytes of memory from FROM (0000)\n\tSETMEM ADDR VAL\t\t\t- Sets the memory at ADDR to VAL\n\tSTEP [N]\t\t\t- Runs N clock cycles\n\tRUN\t\t\t\t- Runs the program, disabling this prompt\n\tRESET\t\t\t\t- Resets the CPU\n\tEXIT\t\t\t\t- Exits\n\n");
 	}
 	else if (strcmp("STEP", command) == 0) {
 		int n = 1;
