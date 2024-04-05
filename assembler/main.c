@@ -736,7 +736,7 @@ struct instruction parse_line(char *line, FILE *fp, struct scope *scope) {
 
 	//FIND ADDRESSIGN MODE WITH REGEX
 	
-	if (slre_match("[A-Z][A-Z][A-Z]\\s([a-z_-]+)\\s*$", line , strlen(line), &arg_cap, 1, SLRE_IGNORE_CASE) > 0) {
+	if (slre_match("[A-Z][A-Z][A-Z]\\s+([A-Z_-]+)\\s*$", line , strlen(line), &arg_cap, 1, SLRE_IGNORE_CASE) > 0) {
 		printf("found label [%.*s]\n", arg_cap.len, arg_cap.ptr);
 		instr.mode = ABS;
 		scope->inst[scope->insts].bitlatch = false;
@@ -787,7 +787,7 @@ struct instruction parse_line(char *line, FILE *fp, struct scope *scope) {
 		printf("found ind addr: [%.*s]\n", arg_cap.len, arg_cap.ptr);
 		instr.mode = IND;
 	}
-	else if (slre_match("\\s(\\$?%?\\S\\S\\S\\S)\\s*$", line, strlen(line), &arg_cap, 1, SLRE_IGNORE_CASE) > 0) {	//as above
+	else if (slre_match("\\s([\\$%]\\S+)\\s*$", line, strlen(line), &arg_cap, 1, SLRE_IGNORE_CASE) > 0) {	//as above
 		printf("found abs addr: [%.*s]\n", arg_cap.len, arg_cap.ptr);
 		instr.mode = ABS;
 	}
