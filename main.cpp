@@ -41,7 +41,7 @@ int prompt(cpu& cpu, memory& memory, bool verb) {
 	}
 	
 	if (strcmp("HELP", command) == 0) {
-		printf("Commands:\n\tHELP - Displays this message\n\tDUMPREG - Prints all registers\n\tSETREG REG [VAL] - Sets a Register to VAL (default 0)\n\tDUMPMEM [FROM] [LENGTH] - Prints LEGNTH (16) bytes of memory from FROM (0000)\n\tSETMEM ADDR VAL - Sets the memory at ADDR to VAL\n\tSTEP [N] - Runs N clock cycles\n\tRUN - Runs the program, disabling this prompt\n\tEXIT - Exits\n\n");
+		printf("Commands:\n\tHELP - Displays this message\n\tDUMPREG - Prints all registers\n\tSETREG REG [VAL] - Sets a Register to VAL (default 0)\n\tDUMPMEM [FROM] [LENGTH] - Prints LEGNTH (16) bytes of memory from FROM (0000)\n\tSETMEM ADDR VAL - Sets the memory at ADDR to VAL\n\tSTEP [N] - Runs N clock cycles\n\tRUN - Runs the program, disabling this prompt\n\tRESET - Resets the CPU\n\tEXIT - Exits\n\n");
 	}
 	else if (strcmp("STEP", command) == 0) {
 		int n = 1;
@@ -49,6 +49,16 @@ int prompt(cpu& cpu, memory& memory, bool verb) {
 		if (verb)
 			printf("Stepping %d times\n", n);
 		return n;
+	}
+	else if (strcmp("RESET", command) == 0) {
+		cpu.reset();
+		if (verb) {
+			printf("Reset CPU\n");
+			printf("Cycles: %d; PC: %04X; A: %02X; X: %02X; Y: %02X; SP: %02X; STAT: ", cpu.clocks, cpu.PC, cpu.A, cpu.X, cpu.Y, cpu.SP);
+			std::bitset<8> stat(cpu.stat);
+			std::cout << stat << '\n';	
+		
+		}
 	}
 	else if (strcmp("DUMPREG", command) == 0) {
 		printf("Cycles: %d; PC: %04X; A: %02X; X: %02X; Y: %02X; SP: %02X; STAT: ", cpu.clocks, cpu.PC, cpu.A, cpu.X, cpu.Y, cpu.SP);
