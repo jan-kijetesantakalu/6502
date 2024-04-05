@@ -16,6 +16,7 @@ void dumpmem(memory& mem, unsigned short addr, unsigned short len) {
 	if ((i % 16) != 0) {
 		printf("\n");
 	}
+	printf("\n");
 }
 
 void loadprog(memory& memory, FILE *file, bool verb) {
@@ -232,7 +233,6 @@ int main(int argc, char **argv) {
 						break;
 					}
 					
-
 					if (strncmp("0x", argv[i], 2))
 						start = strtol(argv[i], NULL, 10);
 					else
@@ -258,10 +258,8 @@ int main(int argc, char **argv) {
 	memory memory;
 	cpu cpu(memory);
 
-	if (file != NULL) {
+	if (file != NULL)
 		loadprog(memory, file, verb);
-		printf("\n");
-	}
 
 	if (start) {
 		if (verb)
@@ -284,6 +282,8 @@ int main(int argc, char **argv) {
 				inter = false;
 			}
 		}
+		
+		clock = cpu.clock();
 
 		if (verb) {
 			//PRINT CPU STATE
@@ -292,7 +292,6 @@ int main(int argc, char **argv) {
 			std::cout << stat << '\n';
 		}	
 
-		clock = cpu.clock();
 	}
 
 	//EXIT
