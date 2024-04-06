@@ -294,17 +294,23 @@ int main(int argc, char **argv) {
 	cpu.reset(verb);
 	int nsteps = 0;
 	bool clock = true;
+	bool run = false;
 	while (clock){
 		nsteps--;
 		
-		while (inter && nsteps <= 0) {
+		while (inter && nsteps <= 0 && !run) {
 			nsteps = prompt(cpu, memory, verb);
 			if (nsteps == -1) {
-				inter = false;
+				run = true;
 			}
 		}
 		
 		clock = cpu.clock(verb);
+		
+		if (!clock && run && inter) {
+			run = false;
+			clock = true;
+		}
 
 		if (verb) {
 			//PRINT CPU STATE
