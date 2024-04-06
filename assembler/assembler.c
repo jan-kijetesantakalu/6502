@@ -691,7 +691,7 @@ unsigned char get_opcode(struct instruction instr, bool verb) {
 }
 
 
-struct instruction parse_line(char *line, FILE *fp, struct scope *scope, bool verb) {
+struct instruction parse_line(char *line, FILE *fp, struct scope *scope, int org, bool verb) {
 	struct slre_cap SYM_cap;
 	struct instruction instr = {{0},ERROR,0};
 	
@@ -709,7 +709,7 @@ struct instruction parse_line(char *line, FILE *fp, struct scope *scope, bool ve
 		//Matched label
 		fseek(fp, 0, SEEK_END);
 		scope->defn[scope->defns].id = (char *)calloc((label_cap.len+1), sizeof(char));
-		scope->defn[scope->defns].offset = ftell(fp);
+		scope->defn[scope->defns].offset = ftell(fp)+org;
 		memcpy(scope->defn[scope->defns].id, label_cap.ptr, label_cap.len);
 		scope->defns++;
 		if (verb) printf("defined label %d -> [[%s]->[%d]] | next defn no: %d\n", scope->defns-1, scope->defn[scope->defns-1].id, scope->defn[scope->defns-1].offset, scope->defns);
@@ -850,7 +850,7 @@ void write_instruction(struct instruction instr, FILE *fp, bool verb) {
 }
 
 
-void assemble(FILE *asmrawfp, FILE *binfp, bool verb) {
+void assemble(FILE *asmrawfp, FILE *binfp, int org, bool verb) {
 	char line[LINE_SIZE];
 	struct scope scope = {{{}},{{}},0, 0};
 
@@ -858,7 +858,7 @@ void assemble(FILE *asmrawfp, FILE *binfp, bool verb) {
 		if (line[strlen(line)-1] == '\n')
 			line[strlen(line)-1]='\0';
 		if (verb) printf("parsing line:\n[\n%s\n]\n", line);
-		struct instruction parsed_line = parse_line(line, binfp, &scope, verb);
+		struct instruction parsed_line = parse_line(line, binfp, &scope, org, verb);
 		if (parsed_line.mode == -1)
 			continue;
 		if (verb) printf("instruction %s, with mode %d, and data %d\n", parsed_line.SYM, parsed_line.mode, parsed_line.operand);

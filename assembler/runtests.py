@@ -19,10 +19,13 @@ if __name__ == "__main__":
     print("running tests:")
     keep = []
     for test in tests:
+        org = 0
+        if "@" in test:
+            org = int(''.join(test[test.index('@')+1:test.index('@')+5]),16)
         if "windows" in platform.system().lower():
-            os.system(f"(asm.exe {test} {os.path.split(test)[-1].split('.')[-2]}.bin.tmp) > {os.path.split(test)[-1].split('.')[-2]}.tmp")
+            os.system(f"(asm.exe {test} {os.path.split(test)[-1].split('.')[-2]}.bin.tmp {org}) > {os.path.split(test)[-1].split('.')[-2]}.tmp")
         else:
-            os.system(f"(./asm.exe {test} ./{os.path.split(test)[-1].split('.')[-2]}.bin.tmp) > ./{os.path.split(test)[-1].split('.')[-2]}.tmp")
+            os.system(f"(./asm.exe {test} ./{os.path.split(test)[-1].split('.')[-2]}.bin.tmp {org}) > ./{os.path.split(test)[-1].split('.')[-2]}.tmp")
         with open(os.path.split(test)[-1].split('.')[-2] +".bin.tmp", 'rb') as f:
             tested = False
             for ans in anss:

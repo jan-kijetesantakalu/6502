@@ -19,17 +19,17 @@ void dumpmem(memory& mem, unsigned short addr, unsigned short len) {
 	printf("\n");
 }
 
-void loadprog(memory& memory, FILE *file, bool verb) {
+void loadprog(memory& memory, FILE *file, int org, bool verb) {
 	if (verb)
 		printf("Copying file into memory:\n");
 	fseek(file, 0, SEEK_END);
 	unsigned short fsize = ftell(file);
 	for (unsigned short i = 0; i < fsize; i++) {
 		fseek(file, i, SEEK_SET);
-		memory.write(i, getc(file));
+		memory.write(i + org, getc(file));
 	}
 	if (verb) 
-		dumpmem(memory, 0, fsize);
+		dumpmem(memory, org, fsize);
 }
 
 int prompt(cpu& cpu, memory& memory, bool verb) {
@@ -57,7 +57,7 @@ int prompt(cpu& cpu, memory& memory, bool verb) {
 	}
 	
 	if (strcmp("HELP", command) == 0) {
-		printf("Commands:\n\tHELP\t\t\t\t- Displays this message\n\tLOADPROG FILE\t\t\t- Loads program from FILE into 0000\n\tASM FILE\t\t\t- Assembles FILE and then loads into memory at 0000\n\tDUMPREG\t\t\t\t- Prints all registers\n\tSETREG REG [VAL]\t\t- Sets a Register to VAL (default 0)\n\tDUMPMEM [FROM] [LENGTH]\t\t- Prints LEGNTH (16) bytes of memory from FROM (0000)\n\tSETMEM ADDR VAL\t\t\t- Sets the memory at ADDR to VAL\n\tSTEP [N]\t\t\t- Runs N clock cycles\n\tRUN\t\t\t\t- Runs the program, disabling this prompt\n\tRESET\t\t\t\t- Resets the CPU\n\tEXIT\t\t\t\t- Exits\n\n");
+		printf("Commands:\n\tHELP\t\t\t\t- Displays this message\n\tLOADPROG FILE ORG\t\t\t- Loads program from FILE into ORG\n\tASM FILE ORG\t\t\t- Assembles FILE (using ORG as ORG) and then loads into memory at ORG\n\tDUMPREG\t\t\t\t- Prints all registers\n\tSETREG REG [VAL]\t\t- Sets a Register to VAL (default 0)\n\tDUMPMEM [FROM] [LENGTH]\t\t- Prints LEGNTH (16) bytes of memory from FROM (0000)\n\tSETMEM ADDR VAL\t\t\t- Sets the memory at ADDR to VAL\n\tSTEP [N]\t\t\t- Runs N clock cycles\n\tRUN\t\t\t\t- Runs the program, disabling this prompt\n\tRESET\t\t\t\t- Resets the CPU\n\tEXIT\t\t\t\t- Exits\n\n");
 	}
 	else if (strcmp("STEP", command) == 0) {
 		int n = 1;
@@ -68,7 +68,8 @@ int prompt(cpu& cpu, memory& memory, bool verb) {
 	}
 	else if (strcmp("LOADPROG", command) == 0) {
 		char prog[64] = {0};
-		sscanf(input, "%s%s", command, prog);
+		int org = 0;
+		sscanf(input, "%s%s%04X", command, prog, &org);
 		if (verb) {
 			printf("Opening file [%s]\n", prog);
 		}
@@ -77,11 +78,12 @@ int prompt(cpu& cpu, memory& memory, bool verb) {
 			printf("File %s not found\n", prog);
 			return 0;
 		}
-		loadprog(memory, file, verb);
+		loadprog(memory, file, org, verb);
 	}
 	else if (strcmp("ASM", command) == 0) {
 		char prog[64] = {0};
-		sscanf(input, "%s%s", command, prog);
+		int org = 0;
+		sscanf(input, "%s%s%04X", command, prog, &org);
 		if (verb) {
 			printf("Opening file [%s]\n", prog);
 		}
@@ -91,10 +93,10 @@ int prompt(cpu& cpu, memory& memory, bool verb) {
 			return 0;
 		}
 		FILE *bin = fopen("tmp.bin.tmp", "wb");
-		assemble(file, bin, verb);
+		assemble(file, bin, org, verb);
 		fclose(bin);
 		bin = fopen("tmp.bin.tmp", "rb");
-		loadprog(memory, bin, verb);
+		loadprog(memory, bin, org, verb);
 		fclose(bin);
 		fclose(file);
 		remove("tmp.bin.tmp");
@@ -104,9 +106,6 @@ int prompt(cpu& cpu, memory& memory, bool verb) {
 		cpu.reset(verb);
 		if (verb) {
 			printf("Reset CPU\n");
-			printf("Cycles: %d; PC: %04X; A: %02X; X: %02X; Y: %02X; SP: %02X; STAT: ", cpu.clocks, cpu.PC, cpu.A, cpu.X, cpu.Y, cpu.SP);
-			std::bitset<8> stat(cpu.stat);
-			std::cout << stat << '\n';	
 			return 0;	
 		}
 	}
@@ -128,12 +127,7 @@ int prompt(cpu& cpu, memory& memory, bool verb) {
 		}
 		
 		int val = 0;
-		if (sval[1] == 'D') {
-			sscanf(sval+2, "%d", &val);
-		}
-		else {
-			sscanf(sval, "%02X", &val);
-		}
+		sscanf(sval, "%02X", &val);
 		if (verb)
 			printf("%s -> %02X [%d]\n", reg, val, val);
 		
@@ -180,8 +174,6 @@ int prompt(cpu& cpu, memory& memory, bool verb) {
 		for (int i = 0; i < strlen(saddr); ++i) {
 			saddr[i] = toupper(saddr[i]);
 		}
-		printf("saddr: %s\nsval: %s\n", saddr, sval);
-		
 		sscanf(saddr, "%04X", &addr);
 		
 		for (int i = 0; i < strlen(sval); i++) {
@@ -190,12 +182,7 @@ int prompt(cpu& cpu, memory& memory, bool verb) {
 		
 		unsigned char val = 0;
 		
-		if (sval[1] == 'D') {
-			sscanf(sval+2, "%d", &val);
-		}
-		else {
-			sscanf(sval, "%02X", &val);
-		}
+		sscanf(sval, "%02X", &val);
 		
 		memory.write(addr, val);
 
@@ -280,13 +267,13 @@ int main(int argc, char **argv) {
 	cpu cpu(&memory);
 
 	if (file != NULL)
-		loadprog(memory, file, verb);
+		loadprog(memory, file, 0, verb);
 
 	if (start) {
 		if (verb)
 			printf("Writing start location [%04X] to memory\n", start);
-		memory.write(0xFFFC, start >> 8);
-		memory.write(0xFFFD, start &  0xFF);
+		memory.write(0xFFFD, start >> 8);
+		memory.write(0xFFFC, start &  0xFF);
 		if (verb)
 			printf("\tWritten %02X to FFFC\n\tWritten %02X to FFFD\n\n", memory.read(0xFFFC), memory.read(0xFFFD));
 	}
@@ -307,7 +294,7 @@ int main(int argc, char **argv) {
 		
 		clock = cpu.clock(verb);
 		
-		if (!clock && run && inter) {
+		if (!clock && inter) {
 			run = false;
 			clock = true;
 		}

@@ -32,4 +32,4 @@ struct scope {
 	struct label inst[255];
 };
 
-void assemble(FILE *asmrawfp, FILE *binfp, bool verb);
+void assemble(FILE *asmrawfp, FILE *binfp, int org, bool verb);
