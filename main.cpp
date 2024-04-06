@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <bitset>
-
+#include "assembler/assembler.h"
 
 void dumpmem(memory& mem, unsigned short addr, unsigned short len) {
 	int i;
@@ -57,7 +57,7 @@ int prompt(cpu& cpu, memory& memory, bool verb) {
 	}
 	
 	if (strcmp("HELP", command) == 0) {
-		printf("Commands:\n\tHELP\t\t\t\t- Displays this message\n\tLOADPROG FILE\t\t\t- Loads program from FILE into 0000\n\tDUMPREG\t\t\t\t- Prints all registers\n\tSETREG REG [VAL]\t\t- Sets a Register to VAL (default 0)\n\tDUMPMEM [FROM] [LENGTH]\t\t- Prints LEGNTH (16) bytes of memory from FROM (0000)\n\tSETMEM ADDR VAL\t\t\t- Sets the memory at ADDR to VAL\n\tSTEP [N]\t\t\t- Runs N clock cycles\n\tRUN\t\t\t\t- Runs the program, disabling this prompt\n\tRESET\t\t\t\t- Resets the CPU\n\tEXIT\t\t\t\t- Exits\n\n");
+		printf("Commands:\n\tHELP\t\t\t\t- Displays this message\n\tLOADPROG FILE\t\t\t- Loads program from FILE into 0000\n\tASM FILE\t\t\t- Assembles FILE and then loads into memory at 0000\n\tDUMPREG\t\t\t\t- Prints all registers\n\tSETREG REG [VAL]\t\t- Sets a Register to VAL (default 0)\n\tDUMPMEM [FROM] [LENGTH]\t\t- Prints LEGNTH (16) bytes of memory from FROM (0000)\n\tSETMEM ADDR VAL\t\t\t- Sets the memory at ADDR to VAL\n\tSTEP [N]\t\t\t- Runs N clock cycles\n\tRUN\t\t\t\t- Runs the program, disabling this prompt\n\tRESET\t\t\t\t- Resets the CPU\n\tEXIT\t\t\t\t- Exits\n\n");
 	}
 	else if (strcmp("STEP", command) == 0) {
 		int n = 1;
@@ -78,6 +78,27 @@ int prompt(cpu& cpu, memory& memory, bool verb) {
 			return 0;
 		}
 		loadprog(memory, file, verb);
+	}
+	else if (strcmp("ASM", command) == 0) {
+		char prog[64] = {0};
+		sscanf(input, "%s%s", command, prog);
+		if (verb) {
+			printf("Opening file [%s]\n", prog);
+		}
+		FILE *file = fopen(prog, "rb");
+		if (file == NULL) {
+			printf("File %s not found\n", prog);
+			return 0;
+		}
+		FILE *bin = fopen("tmp.bin.tmp", "wb");
+		assemble(file, bin, verb);
+		fclose(bin);
+		bin = fopen("tmp.bin.tmp", "rb");
+		loadprog(memory, bin, verb);
+		fclose(bin);
+		fclose(file);
+		remove("tmp.bin.tmp");
+		
 	}
 	else if (strcmp("RESET", command) == 0) {
 		cpu.reset();
