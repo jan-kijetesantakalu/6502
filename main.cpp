@@ -101,13 +101,13 @@ int prompt(cpu& cpu, memory& memory, bool verb) {
 		
 	}
 	else if (strcmp("RESET", command) == 0) {
-		cpu.reset();
+		cpu.reset(verb);
 		if (verb) {
 			printf("Reset CPU\n");
 			printf("Cycles: %d; PC: %04X; A: %02X; X: %02X; Y: %02X; SP: %02X; STAT: ", cpu.clocks, cpu.PC, cpu.A, cpu.X, cpu.Y, cpu.SP);
 			std::bitset<8> stat(cpu.stat);
 			std::cout << stat << '\n';	
-		
+			return 0;	
 		}
 	}
 	else if (strcmp("DUMPREG", command) == 0) {
@@ -277,7 +277,7 @@ int main(int argc, char **argv) {
 	}
 
 	memory memory;
-	cpu cpu(memory);
+	cpu cpu(&memory);
 
 	if (file != NULL)
 		loadprog(memory, file, verb);
@@ -291,7 +291,7 @@ int main(int argc, char **argv) {
 			printf("\tWritten %02X to FFFC\n\tWritten %02X to FFFD\n\n", memory.read(0xFFFC), memory.read(0xFFFD));
 	}
 
-	cpu.reset();
+	cpu.reset(verb);
 	int nsteps = 0;
 	bool clock = true;
 	while (clock){
@@ -304,7 +304,7 @@ int main(int argc, char **argv) {
 			}
 		}
 		
-		clock = cpu.clock();
+		clock = cpu.clock(verb);
 
 		if (verb) {
 			//PRINT CPU STATE

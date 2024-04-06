@@ -2,8 +2,8 @@
 
 class cpu{
 	public:
-		bool clock();
-		void reset();
+		bool clock(bool verb);
+		void reset(bool verb);
 		//REGISTERS
 		unsigned char  A;
 		unsigned char  X;
@@ -11,10 +11,13 @@ class cpu{
 		unsigned char  SP;
 		unsigned char  stat;
 		unsigned short PC;
-		cpu(memory m) {
+		cpu(memory *m) {
 			mem = m;
+			reset(false);
 		};
 		int clocks;
+		int clockwait;
+		int opcode;
 	private:
-		memory mem;
+		memory *mem;
 };
