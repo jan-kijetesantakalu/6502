@@ -29,7 +29,8 @@ bool cpu::clock(bool verb) {
 		}
 	}
 	else {
-		printf("%d cycles remain from last instruction\n", clockwait);
+		if (verb)
+			printf("%d cycles remain from last instruction\n", clockwait);
 	}
 	clockwait--;
 	return true; 
