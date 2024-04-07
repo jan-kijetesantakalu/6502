@@ -18,6 +18,9 @@ class cpu{
 		int clocks;
 		int clockwait;
 		int opcode;
+		//
+		unsigned char operand;
+		unsigned short operand_addr;
 	private:
 		memory *mem;
 };

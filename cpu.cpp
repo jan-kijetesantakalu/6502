@@ -1,5 +1,7 @@
 #include "cpu.hpp"
+#include "instructions.hpp"
 #include <stdio.h>
+
 
 void cpu::reset(bool verb) {
 	//RESET
