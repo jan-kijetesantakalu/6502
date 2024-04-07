@@ -21,7 +21,7 @@ void dumpmem(memory& mem, unsigned short addr, unsigned short len) {
 
 void loadprog(memory& memory, FILE *file, int org, bool verb) {
 	if (verb)
-		printf("Copying file into memory:\n");
+		printf("Copying file into memory @ %04X:\n", org);
 	fseek(file, 0, SEEK_END);
 	unsigned short fsize = ftell(file);
 	for (unsigned short i = 0; i < fsize; i++) {
@@ -214,6 +214,7 @@ int main(int argc, char **argv) {
 	FILE *logfile = NULL;
 	FILE *file = NULL;
 	int start = 0;
+	int org = 0;
 
 	for (int i = 1; i < argc; ++i) {
 		if (argv[i][0] == '-') {
@@ -250,16 +251,22 @@ int main(int argc, char **argv) {
 					break;
 			}
 		}
-		else {
+		else if (file == NULL) {
 			file = fopen(argv[i], "rb"); 
 			if (file == NULL) {
 				printf("File %s not found\n", argv[i]);	
 			}
 		}
+		else {
+			if (strncmp("0x", argv[i],2))
+				org = strtol(argv[i], NULL, 10);
+			else
+				org = strtol(argv[i]+2, NULL, 16);
+		}
 	}
 	
 	if (help) {
-		printf("USAGE: %s [OPTIONS] [FILE]\n\nOPTIONS:\n-? | -h\tHELP, print this help\n-i\tRun with Interactive Prompt\n-v\tRun Verbosely\n-s\tSpecify start location, copied to FFFC/FD in memory before execution\n\nFILE\tBinary File copied to 0000 in memory before execution\n\n", argv[0]);
+		printf("USAGE: %s [OPTIONS] [FILE] [ORG]\n\nOPTIONS:\n-? | -h\tHELP, print this help\n-i\tRun with Interactive Prompt\n-v\tRun Verbosely\n-s\tSpecify start location, copied to FFFC/FD in memory before execution\n\nFILE\tBinary File copied to ORG in memory before execution\n\n", argv[0]);
 		return -1;
 	}
 
@@ -267,7 +274,7 @@ int main(int argc, char **argv) {
 	cpu cpu(&memory);
 
 	if (file != NULL)
-		loadprog(memory, file, 0, verb);
+		loadprog(memory, file, org, verb);
 
 	if (start) {
 		if (verb)
