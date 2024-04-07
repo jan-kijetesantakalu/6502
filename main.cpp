@@ -211,6 +211,7 @@ int main(int argc, char **argv) {
 	bool inter = false;
 	bool help = false;
 	bool verb = false;
+	bool asmb = false;
 	FILE *logfile = NULL;
 	FILE *file = NULL;
 	int start = 0;
@@ -247,6 +248,8 @@ int main(int argc, char **argv) {
 					else
 						start = strtol(argv[i]+2, NULL, 16);
 					break;
+				case 'a':
+					asmb = true;
 				default:
 					break;
 			}
@@ -266,16 +269,27 @@ int main(int argc, char **argv) {
 	}
 	
 	if (help) {
-		printf("USAGE: %s [OPTIONS] [FILE] [ORG]\n\nOPTIONS:\n-? | -h\tHELP, print this help\n-i\tRun with Interactive Prompt\n-v\tRun Verbosely\n-s\tSpecify start location, copied to FFFC/FD in memory before execution\n\nFILE\tBinary File copied to ORG in memory before execution\n\n", argv[0]);
+		printf("USAGE: %s [OPTIONS] [FILE] [ORG]\n\nOPTIONS:\n-? | -h\tHELP, print this help\n-i\tRun with Interactive Prompt\n-v\tRun Verbosely\n-s\tSpecify start location, copied to FFFC/FD in memory before execution\n-a\tAssembles FILE, and copies binary to memory\n\nFILE\tBinary File copied to ORG in memory before execution \n\n", argv[0]);
 		return -1;
 	}
 
 	memory memory;
 	cpu cpu(&memory);
 
-	if (file != NULL)
-		loadprog(memory, file, org, verb);
-
+	if (file != NULL) {
+		if (!asmb)
+			loadprog(memory, file, org, verb);
+		else {
+			FILE *bin = fopen("tmp.bin.tmp", "wb");
+			assemble(file, bin, org, verb);
+			fclose(bin);
+			bin = fopen("tmp.bin.tmp", "rb");
+			printf("\n");
+			loadprog(memory, bin, org, verb);
+			fclose(bin);
+			remove("tmp.bin.tmp");	
+		}
+	}
 	if (start) {
 		if (verb)
 			printf("Writing start location [%04X] to memory\n", start);
