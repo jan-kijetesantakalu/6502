@@ -2,4 +2,4 @@
 
 
 
-struct instruction instructions[256] ={0}
+struct instruction instructions[256] ={0};
